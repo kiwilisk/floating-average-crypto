@@ -86,7 +86,7 @@ public class FloatingAverageLambdaModule extends AbstractModule {
                 return properties;
             }
         } catch (Exception e) {
-            throw new RuntimeException("Failed to load properties from [" + CONFIG_PROPERTIES + "]", e);
+            throw new RuntimeException("Failed to load properties from file [" + CONFIG_PROPERTIES + "]", e);
         }
     }
 }

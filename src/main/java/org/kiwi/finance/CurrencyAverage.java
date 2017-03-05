@@ -22,7 +22,7 @@ public class CurrencyAverage {
 
     private BigDecimal sum(Collection<Currency> currencies) {
         return currencies.stream()
-                .map(Currency::priceInUsd)
+                .map(Currency::priceInUsDollar)
                 .reduce(ZERO, BigDecimal::add);
     }
 }

@@ -12,7 +12,7 @@ public class UnirestClient implements RestClient {
             HttpResponse<String> response = Unirest.get(endpoint).asString();
             return response.getBody();
         } catch (UnirestException e) {
-            throw new RuntimeException("Failed to receive response from endpoint" + endpoint, e);
+            throw new RuntimeException("Failed to receive response from endpoint [" + endpoint + "]", e);
         }
     }
 }

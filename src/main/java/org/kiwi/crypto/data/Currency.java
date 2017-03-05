@@ -18,7 +18,7 @@ public abstract class Currency {
 
     public abstract String name();
 
-    public abstract BigDecimal priceInUsd();
+    public abstract BigDecimal priceInUsDollar();
 
     public abstract Instant lastUpdated();
 }

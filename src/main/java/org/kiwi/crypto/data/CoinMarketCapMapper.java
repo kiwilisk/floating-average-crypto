@@ -43,13 +43,13 @@ public class CoinMarketCapMapper implements CurrencyMapper<String> {
         }
     }
 
-    private Function<JsonNode, ImmutableCurrency> toCurrency() {
+    private Function<JsonNode, Currency> toCurrency() {
         return node -> {
             try {
                 return ImmutableCurrency.builder()
                         .id(parseTextFrom(node, "id"))
                         .name(parseTextFrom(node, "name"))
-                        .priceInUsd(parsePriceFrom(node))
+                        .priceInUsDollar(parsePriceFrom(node))
                         .lastUpdated(parseInstantFrom(node))
                         .build();
             } catch (Exception e) {
