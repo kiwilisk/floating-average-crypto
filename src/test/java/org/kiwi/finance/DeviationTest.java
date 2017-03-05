@@ -9,7 +9,6 @@ import static org.assertj.core.api.Java6Assertions.assertThat;
 
 public class DeviationTest {
 
-
     private Deviation deviation;
 
     @Before

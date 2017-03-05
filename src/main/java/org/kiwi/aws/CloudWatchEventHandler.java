@@ -13,7 +13,6 @@ public class CloudWatchEventHandler implements RequestHandler<Object, Void> {
 
     private static final Injector INJECTOR = createInjector(new FloatingAverageLambdaModule());
 
-
     @Override
     public Void handleRequest(Object input, Context context) {
         return null;

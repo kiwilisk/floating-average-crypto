@@ -21,7 +21,6 @@ import static org.kiwi.crypto.data.ImmutableCurrency.newCurrency;
 
 public class CoinMarketCapMapperTest {
 
-
     private CoinMarketCapMapper mapper;
     private Clock clock;
 
@@ -97,7 +96,9 @@ public class CoinMarketCapMapperTest {
     @Test
     public void should_parse_goddamn_vcoin() throws Exception {
         String json = "{\"id\":\"vcoin\",\"name\":\"Vcoin\",\"symbol\":\"VCN\",\"rank\":\"737\",\"price_usd\":null,\"price_btc\":null,\"24h_volume_usd\":null,\"market_cap_usd\":null,\"available_supply\":null,\"total_supply\":null,\"percent_change_1h\":null,\"percent_change_24h\":null,\"percent_change_7d\":null,\"last_updated\":null}";
+
         Collection<Currency> currency = mapper.map(json);
+
         assertThat(currency).isNotNull();
     }
 }
