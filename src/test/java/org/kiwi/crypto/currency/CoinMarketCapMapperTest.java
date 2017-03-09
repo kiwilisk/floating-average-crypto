@@ -1,23 +1,21 @@
-package org.kiwi.crypto.data;
+package org.kiwi.crypto.currency;
+
+import static java.time.Instant.ofEpochSecond;
+import static java.util.Collections.singleton;
+import static org.assertj.core.api.Assertions.assertThat;
+import static org.kiwi.crypto.currency.Currency.newCurrency;
 
 import com.fasterxml.jackson.databind.ObjectMapper;
 import com.fasterxml.jackson.databind.SerializationFeature;
 import com.fasterxml.jackson.datatype.jdk8.Jdk8Module;
 import com.fasterxml.jackson.datatype.jsr310.JavaTimeModule;
-
-import org.junit.Before;
-import org.junit.Test;
-
 import java.math.BigDecimal;
 import java.time.Clock;
 import java.time.Instant;
 import java.time.ZoneId;
 import java.util.Collection;
-
-import static java.time.Instant.ofEpochSecond;
-import static java.util.Collections.singleton;
-import static org.assertj.core.api.Assertions.assertThat;
-import static org.kiwi.crypto.data.ImmutableCurrency.newCurrency;
+import org.junit.Before;
+import org.junit.Test;
 
 public class CoinMarketCapMapperTest {
 

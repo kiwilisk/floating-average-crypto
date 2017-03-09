@@ -1,9 +1,8 @@
 package org.kiwi;
 
-import com.google.inject.AbstractModule;
-import com.google.inject.Provides;
-import com.google.inject.Singleton;
-import com.google.inject.TypeLiteral;
+import static com.amazonaws.regions.Regions.EU_CENTRAL_1;
+import static com.fasterxml.jackson.databind.SerializationFeature.WRITE_DATES_AS_TIMESTAMPS;
+import static com.google.inject.name.Names.bindProperties;
 
 import com.amazonaws.regions.Region;
 import com.amazonaws.services.s3.AmazonS3Client;
@@ -12,23 +11,21 @@ import com.amazonaws.services.sns.AmazonSNSClient;
 import com.fasterxml.jackson.databind.ObjectMapper;
 import com.fasterxml.jackson.datatype.jdk8.Jdk8Module;
 import com.fasterxml.jackson.datatype.jsr310.JavaTimeModule;
-
-import org.kiwi.crypto.api.CoinMarketCap;
-import org.kiwi.crypto.api.CoinMarketCapRepository;
-import org.kiwi.crypto.api.CurrencyRepository;
-import org.kiwi.crypto.data.CoinMarketCapMapper;
-import org.kiwi.crypto.data.CurrencyMapper;
-import org.kiwi.rest.RestClient;
-import org.kiwi.rest.Unirest;
-import org.kiwi.rest.UnirestClient;
-
+import com.google.inject.AbstractModule;
+import com.google.inject.Provides;
+import com.google.inject.Singleton;
+import com.google.inject.TypeLiteral;
 import java.io.InputStream;
 import java.time.Clock;
 import java.util.Properties;
-
-import static com.amazonaws.regions.Regions.EU_CENTRAL_1;
-import static com.fasterxml.jackson.databind.SerializationFeature.WRITE_DATES_AS_TIMESTAMPS;
-import static com.google.inject.name.Names.bindProperties;
+import org.kiwi.crypto.api.CoinMarketCap;
+import org.kiwi.crypto.api.CoinMarketCapRepository;
+import org.kiwi.crypto.api.CurrencyRepository;
+import org.kiwi.crypto.currency.CoinMarketCapMapper;
+import org.kiwi.crypto.currency.CurrencyMapper;
+import org.kiwi.rest.RestClient;
+import org.kiwi.rest.Unirest;
+import org.kiwi.rest.UnirestClient;
 
 public class FloatingAverageLambdaModule extends AbstractModule {
 

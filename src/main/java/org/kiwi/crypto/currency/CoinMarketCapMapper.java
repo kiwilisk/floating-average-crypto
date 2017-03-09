@@ -1,10 +1,14 @@
-package org.kiwi.crypto.data;
+package org.kiwi.crypto.currency;
 
-import com.google.inject.Inject;
+import static java.time.Instant.ofEpochSecond;
+import static java.util.Spliterators.spliteratorUnknownSize;
+import static java.util.stream.Collectors.toSet;
+import static java.util.stream.StreamSupport.stream;
+import static org.kiwi.crypto.currency.Currency.newCurrency;
 
 import com.fasterxml.jackson.databind.JsonNode;
 import com.fasterxml.jackson.databind.ObjectMapper;
-
+import com.google.inject.Inject;
 import java.io.IOException;
 import java.math.BigDecimal;
 import java.time.Clock;
@@ -12,11 +16,6 @@ import java.time.Instant;
 import java.util.Collection;
 import java.util.Spliterator;
 import java.util.function.Function;
-
-import static java.time.Instant.ofEpochSecond;
-import static java.util.Spliterators.spliteratorUnknownSize;
-import static java.util.stream.Collectors.toSet;
-import static java.util.stream.StreamSupport.stream;
 
 public class CoinMarketCapMapper implements CurrencyMapper<String> {
 
@@ -46,12 +45,11 @@ public class CoinMarketCapMapper implements CurrencyMapper<String> {
     private Function<JsonNode, Currency> toCurrency() {
         return node -> {
             try {
-                return ImmutableCurrency.builder()
-                        .id(parseTextFrom(node, "id"))
-                        .name(parseTextFrom(node, "name"))
-                        .priceInUsDollar(parsePriceFrom(node))
-                        .lastUpdated(parseInstantFrom(node))
-                        .build();
+                String id = parseTextFrom(node, "id");
+                String name = parseTextFrom(node, "name");
+                BigDecimal priceInUsDollar = parsePriceFrom(node);
+                Instant lastUpdated = parseInstantFrom(node);
+                return newCurrency(id, name, priceInUsDollar, lastUpdated);
             } catch (Exception e) {
                 throw new RuntimeException("could not parse " + node);
             }

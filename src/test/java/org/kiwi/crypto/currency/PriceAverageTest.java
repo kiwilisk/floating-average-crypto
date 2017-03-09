@@ -1,30 +1,28 @@
-package org.kiwi.finance;
+package org.kiwi.crypto.currency;
 
-import org.junit.Before;
-import org.junit.Test;
-import org.kiwi.crypto.data.Currency;
+import static java.util.Arrays.asList;
+import static org.assertj.core.api.Assertions.assertThat;
+import static org.kiwi.crypto.currency.Currency.newCurrency;
 
 import java.math.BigDecimal;
 import java.time.Instant;
 import java.util.Collection;
 import java.util.Collections;
+import org.junit.Before;
+import org.junit.Test;
 
-import static java.util.Arrays.asList;
-import static org.assertj.core.api.Assertions.assertThat;
-import static org.kiwi.crypto.data.ImmutableCurrency.newCurrency;
+public class PriceAverageTest {
 
-public class CurrencyAverageTest {
-
-    private CurrencyAverage currencyAverage;
+    private PriceAverage priceAverage;
 
     @Before
     public void setUp() throws Exception {
-        currencyAverage = new CurrencyAverage();
+        priceAverage = new PriceAverage();
     }
 
     @Test
     public void should_return_zero_for_empty_currencies() throws Exception {
-        BigDecimal average = this.currencyAverage.calculateFor(Collections.emptyList());
+        BigDecimal average = this.priceAverage.calculateFor(Collections.emptyList());
 
         assertThat(average).isEqualTo("0");
     }
@@ -39,7 +37,7 @@ public class CurrencyAverageTest {
                 newCurrency("someId", "someName", new BigDecimal("10003.997793"), Instant.now())
         );
 
-        BigDecimal average = this.currencyAverage.calculateFor(currencies);
+        BigDecimal average = this.priceAverage.calculateFor(currencies);
 
         assertThat(average).isEqualTo(new BigDecimal("9569.073171"));
     }

@@ -1,9 +1,9 @@
 package org.kiwi.finance;
 
-import java.math.BigDecimal;
-
 import static java.math.BigDecimal.ZERO;
 import static java.math.RoundingMode.CEILING;
+
+import java.math.BigDecimal;
 
 class Deviation {
 

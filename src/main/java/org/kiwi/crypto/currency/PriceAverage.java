@@ -1,15 +1,13 @@
-package org.kiwi.finance;
+package org.kiwi.crypto.currency;
 
-
-import org.kiwi.crypto.data.Currency;
-
-import java.math.BigDecimal;
-import java.util.Collection;
 
 import static java.math.BigDecimal.ZERO;
 import static java.math.RoundingMode.CEILING;
 
-public class CurrencyAverage {
+import java.math.BigDecimal;
+import java.util.Collection;
+
+public class PriceAverage {
 
     public BigDecimal calculateFor(Collection<Currency> currencies) {
         if (currencies.isEmpty()) {

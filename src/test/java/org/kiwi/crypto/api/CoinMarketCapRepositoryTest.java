@@ -1,19 +1,18 @@
 package org.kiwi.crypto.api;
 
-import org.junit.Before;
-import org.junit.Test;
-import org.kiwi.crypto.data.Currency;
-import org.kiwi.crypto.data.CurrencyMapper;
-import org.kiwi.rest.RestClient;
-
-import java.util.Collection;
-
 import static java.util.Collections.emptySet;
 import static org.assertj.core.api.Assertions.assertThat;
 import static org.mockito.Mockito.mock;
 import static org.mockito.Mockito.verify;
 import static org.mockito.Mockito.verifyNoMoreInteractions;
 import static org.mockito.Mockito.when;
+
+import java.util.Collection;
+import org.junit.Before;
+import org.junit.Test;
+import org.kiwi.crypto.currency.Currency;
+import org.kiwi.crypto.currency.CurrencyMapper;
+import org.kiwi.rest.RestClient;
 
 public class CoinMarketCapRepositoryTest {
 

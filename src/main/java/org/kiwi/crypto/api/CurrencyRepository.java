@@ -1,8 +1,7 @@
 package org.kiwi.crypto.api;
 
-import org.kiwi.crypto.data.Currency;
-
 import java.util.Collection;
+import org.kiwi.crypto.currency.Currency;
 
 public interface CurrencyRepository {
 

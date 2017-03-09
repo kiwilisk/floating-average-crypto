@@ -1,4 +1,4 @@
-package org.kiwi.crypto.data;
+package org.kiwi.crypto.currency;
 
 import java.util.Collection;
 

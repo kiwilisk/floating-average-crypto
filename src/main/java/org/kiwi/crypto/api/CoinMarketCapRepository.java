@@ -2,13 +2,11 @@ package org.kiwi.crypto.api;
 
 import com.google.inject.Inject;
 import com.google.inject.name.Named;
-
-import org.kiwi.crypto.data.Currency;
-import org.kiwi.crypto.data.CurrencyMapper;
+import java.util.Collection;
+import org.kiwi.crypto.currency.Currency;
+import org.kiwi.crypto.currency.CurrencyMapper;
 import org.kiwi.rest.RestClient;
 import org.kiwi.rest.Unirest;
-
-import java.util.Collection;
 
 public class CoinMarketCapRepository implements CurrencyRepository {
 
@@ -17,7 +15,8 @@ public class CoinMarketCapRepository implements CurrencyRepository {
     private final String endpoint;
 
     @Inject
-    CoinMarketCapRepository(@Unirest RestClient restClient, @CoinMarketCap CurrencyMapper<String> currencyMapper, @Named(value = "crypto.coin.market.cap.endpoint") String endpoint) {
+    CoinMarketCapRepository(@Unirest RestClient restClient, @CoinMarketCap CurrencyMapper<String> currencyMapper,
+            @Named(value = "crypto.coin.market.cap.endpoint") String endpoint) {
         this.restClient = restClient;
         this.currencyMapper = currencyMapper;
         this.endpoint = endpoint;
