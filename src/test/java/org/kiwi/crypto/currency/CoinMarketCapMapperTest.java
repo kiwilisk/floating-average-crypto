@@ -1,21 +1,20 @@
 package org.kiwi.crypto.currency;
 
+import static java.time.Clock.fixed;
+import static java.time.Instant.now;
 import static java.time.Instant.ofEpochSecond;
 import static java.util.Collections.singleton;
 import static org.assertj.core.api.Assertions.assertThat;
 import static org.kiwi.crypto.currency.Currency.newCurrency;
 
 import com.fasterxml.jackson.databind.ObjectMapper;
-import com.fasterxml.jackson.databind.SerializationFeature;
-import com.fasterxml.jackson.datatype.jdk8.Jdk8Module;
-import com.fasterxml.jackson.datatype.jsr310.JavaTimeModule;
 import java.math.BigDecimal;
 import java.time.Clock;
-import java.time.Instant;
 import java.time.ZoneId;
 import java.util.Collection;
 import org.junit.Before;
 import org.junit.Test;
+import org.kiwi.FloatingAverageLambdaModule;
 
 public class CoinMarketCapMapperTest {
 
@@ -24,11 +23,8 @@ public class CoinMarketCapMapperTest {
 
     @Before
     public void setUp() throws Exception {
-        ObjectMapper objectMapper = new ObjectMapper()
-                .registerModule(new Jdk8Module())
-                .registerModule(new JavaTimeModule())
-                .disable(SerializationFeature.WRITE_DATES_AS_TIMESTAMPS);
-        clock = Clock.fixed(Instant.now(), ZoneId.systemDefault());
+        ObjectMapper objectMapper = new FloatingAverageLambdaModule().objectMapper();
+        clock = fixed(now(), ZoneId.systemDefault());
         mapper = new CoinMarketCapMapper(objectMapper, clock);
     }
 

@@ -6,7 +6,6 @@ import java.util.Collection;
 import org.kiwi.crypto.currency.Currency;
 import org.kiwi.crypto.currency.CurrencyMapper;
 import org.kiwi.rest.RestClient;
-import org.kiwi.rest.Unirest;
 
 public class CoinMarketCapRepository implements CurrencyRepository {
 
@@ -15,7 +14,7 @@ public class CoinMarketCapRepository implements CurrencyRepository {
     private final String endpoint;
 
     @Inject
-    CoinMarketCapRepository(@Unirest RestClient restClient, @CoinMarketCap CurrencyMapper<String> currencyMapper,
+    CoinMarketCapRepository(RestClient restClient, @CoinMarketCap CurrencyMapper<String> currencyMapper,
             @Named(value = "crypto.coin.market.cap.endpoint") String endpoint) {
         this.restClient = restClient;
         this.currencyMapper = currencyMapper;

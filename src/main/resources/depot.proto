@@ -1,0 +1,25 @@
+syntax = "proto3";
+package floatingquotes;
+
+option java_package = "org.kiwi.proto";
+option java_outer_classname = "FloatingAverageProtos";
+
+message Quote {
+  string id = 1;
+  string name = 2;
+  string value = 3;
+  string average = 4;
+  int64 updatedAt = 5;
+}
+
+message FloatingAverage {
+  enum AlertState {
+    NONE = 0;
+    BUY = 1;
+    SELL = 2;
+  }
+  repeated Quote quotes = 1;
+  string currentAverage = 2;
+  int64 closingDate = 3;
+  AlertState alertState = 4;
+}

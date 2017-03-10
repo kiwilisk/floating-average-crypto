@@ -18,13 +18,14 @@ import com.google.inject.TypeLiteral;
 import java.io.InputStream;
 import java.time.Clock;
 import java.util.Properties;
+import org.kiwi.aws.s3.BinaryBucket;
+import org.kiwi.aws.s3.S3Bucket;
 import org.kiwi.crypto.api.CoinMarketCap;
 import org.kiwi.crypto.api.CoinMarketCapRepository;
 import org.kiwi.crypto.api.CurrencyRepository;
 import org.kiwi.crypto.currency.CoinMarketCapMapper;
 import org.kiwi.crypto.currency.CurrencyMapper;
 import org.kiwi.rest.RestClient;
-import org.kiwi.rest.Unirest;
 import org.kiwi.rest.UnirestClient;
 
 public class FloatingAverageLambdaModule extends AbstractModule {
@@ -42,8 +43,9 @@ public class FloatingAverageLambdaModule extends AbstractModule {
                 .annotatedWith(CoinMarketCap.class)
                 .to(CoinMarketCapMapper.class);
         bind(RestClient.class)
-                .annotatedWith(Unirest.class)
                 .to(UnirestClient.class);
+        bind(S3Bucket.class)
+                .to(BinaryBucket.class);
     }
 
     @Provides
