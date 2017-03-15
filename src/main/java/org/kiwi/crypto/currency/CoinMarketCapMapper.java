@@ -47,9 +47,10 @@ public class CoinMarketCapMapper implements CurrencyMapper<String> {
             try {
                 String id = parseTextFrom(node, "id");
                 String name = parseTextFrom(node, "name");
+                String symbol = parseTextFrom(node, "symbol");
                 BigDecimal priceInUsDollar = parsePriceFrom(node);
                 Instant lastUpdated = parseInstantFrom(node);
-                return newCurrency(id, name, priceInUsDollar, lastUpdated);
+                return newCurrency(id, name, symbol, priceInUsDollar, lastUpdated);
             } catch (Exception e) {
                 throw new RuntimeException("could not parse " + node);
             }

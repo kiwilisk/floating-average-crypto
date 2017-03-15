@@ -30,11 +30,11 @@ public class PriceAverageTest {
     @Test
     public void should_calculate_average_from_list_of_currencies() throws Exception {
         Collection<Currency> currencies = asList(
-                newCurrency("someId", "someName", new BigDecimal("10019.997793"), Instant.now()),
-                newCurrency("someId", "someName", new BigDecimal("9845.234556"), Instant.now()),
-                newCurrency("someId", "someName", new BigDecimal("7856.567886"), Instant.now()),
-                newCurrency("someId", "someName", new BigDecimal("10119.567823"), Instant.now()),
-                newCurrency("someId", "someName", new BigDecimal("10003.997793"), Instant.now())
+                newCurrency("someId", "someName", "symbol", new BigDecimal("10019.997793"), Instant.now()),
+                newCurrency("someId", "someName", "symbol", new BigDecimal("9845.234556"), Instant.now()),
+                newCurrency("someId", "someName", "symbol", new BigDecimal("7856.567886"), Instant.now()),
+                newCurrency("someId", "someName", "symbol", new BigDecimal("10119.567823"), Instant.now()),
+                newCurrency("someId", "someName", "symbol", new BigDecimal("10003.997793"), Instant.now())
         );
 
         BigDecimal average = this.priceAverage.calculateFor(currencies);

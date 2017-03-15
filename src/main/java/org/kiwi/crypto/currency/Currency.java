@@ -10,14 +10,16 @@ import java.time.Instant;
 public abstract class Currency {
 
     @JsonCreator
-    static Currency newCurrency(@JsonProperty String id, @JsonProperty String name,
+    static Currency newCurrency(@JsonProperty String id, @JsonProperty String name, @JsonProperty String symbol,
             @JsonProperty BigDecimal priceInUsDollar, @JsonProperty Instant lastUpdated) {
-        return new AutoValue_Currency(id, name, priceInUsDollar, lastUpdated);
+        return new AutoValue_Currency(id, name, symbol, priceInUsDollar, lastUpdated);
     }
 
     public abstract String id();
 
     public abstract String name();
+
+    public abstract String symbol();
 
     public abstract BigDecimal priceInUsDollar();
 
