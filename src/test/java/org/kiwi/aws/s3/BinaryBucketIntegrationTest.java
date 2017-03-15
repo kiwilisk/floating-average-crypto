@@ -46,11 +46,13 @@ public class BinaryBucketIntegrationTest {
         Instant instant = LocalDate.of(2017, 1, 23).atStartOfDay().toInstant(UTC);
         Quote quote = Quote.newBuilder()
                 .setAverage("123456.431")
-                .setId("bitcoin")
-                .setName("Bitcoin")
+                .setValue("119352.674")
                 .setUpdatedAt(instant.getEpochSecond())
                 .build();
         FloatingAverage floatingAverage = FloatingAverage.newBuilder()
+                .setId("bitcoin")
+                .setName("Bitcoin")
+                .setSymbol("BTC")
                 .setAlertState(NONE)
                 .setClosingDate(instant.getEpochSecond())
                 .setCurrentAverage("101010.123")
