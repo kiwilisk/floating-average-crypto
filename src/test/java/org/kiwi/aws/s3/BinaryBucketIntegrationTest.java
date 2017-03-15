@@ -1,23 +1,19 @@
 package org.kiwi.aws.s3;
 
 import static com.amazonaws.regions.Regions.EU_CENTRAL_1;
-import static java.time.ZoneOffset.UTC;
 import static org.assertj.core.api.Assertions.assertThat;
 import static org.kiwi.aws.s3.S3Content.newS3Content;
-import static org.kiwi.proto.FloatingAverageProtos.FloatingAverage.AlertState.NONE;
+import static org.kiwi.proto.FloatingAverageTestData.createFloatingAverage;
 
 import com.amazonaws.auth.AWSCredentials;
 import com.amazonaws.auth.AWSCredentialsProvider;
 import com.amazonaws.auth.profile.ProfileCredentialsProvider;
 import com.amazonaws.services.s3.AmazonS3Client;
 import com.amazonaws.services.s3.model.DeleteObjectRequest;
-import java.time.Instant;
-import java.time.LocalDate;
 import org.junit.After;
 import org.junit.Before;
 import org.junit.Test;
 import org.kiwi.proto.FloatingAverageProtos.FloatingAverage;
-import org.kiwi.proto.FloatingAverageProtos.Quote;
 
 public class BinaryBucketIntegrationTest {
 
@@ -43,20 +39,7 @@ public class BinaryBucketIntegrationTest {
 
     @Test
     public void should_store_and_retrieve_protobuf() throws Exception {
-        Instant instant = LocalDate.of(2017, 1, 23).atStartOfDay().toInstant(UTC);
-        Quote quote = Quote.newBuilder()
-                .setAverage("123456.431")
-                .setValue("119352.674")
-                .setUpdatedAt(instant.getEpochSecond())
-                .build();
-        FloatingAverage floatingAverage = FloatingAverage.newBuilder()
-                .setId("bitcoin")
-                .setName("Bitcoin")
-                .setSymbol("BTC")
-                .setAlertState(NONE)
-                .setClosingDate(instant.getEpochSecond())
-                .setCurrentAverage("101010.123")
-                .addQuotes(quote).build();
+        FloatingAverage floatingAverage = createFloatingAverage();
         S3Content s3Content = newS3Content(TEST_CONTENT_KEY, floatingAverage.toByteArray(), BINARY_CONTENT_TYPE);
 
         binaryBucket.storeContent(s3Content);

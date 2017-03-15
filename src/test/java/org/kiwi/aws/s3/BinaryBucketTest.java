@@ -1,11 +1,10 @@
 package org.kiwi.aws.s3;
 
 
-import static java.time.ZoneOffset.UTC;
 import static org.assertj.core.api.Assertions.assertThat;
 import static org.assertj.core.api.Assertions.assertThatExceptionOfType;
 import static org.kiwi.aws.s3.S3Content.newS3Content;
-import static org.kiwi.proto.FloatingAverageProtos.FloatingAverage.AlertState.NONE;
+import static org.kiwi.proto.FloatingAverageTestData.createFloatingAverage;
 import static org.mockito.Matchers.any;
 import static org.mockito.Mockito.doThrow;
 import static org.mockito.Mockito.mock;
@@ -20,13 +19,9 @@ import com.amazonaws.services.s3.model.S3Object;
 import java.io.ByteArrayInputStream;
 import java.io.IOException;
 import java.io.InputStream;
-import java.time.Instant;
-import java.time.LocalDate;
 import org.junit.Before;
-import org.junit.BeforeClass;
 import org.junit.Test;
 import org.kiwi.proto.FloatingAverageProtos.FloatingAverage;
-import org.kiwi.proto.FloatingAverageProtos.Quote;
 import org.mockito.ArgumentCaptor;
 import org.mockito.InOrder;
 import org.mockito.Mockito;
@@ -34,40 +29,22 @@ import org.mockito.Mockito;
 public class BinaryBucketTest {
 
     private static final String BUCKET_NAME = "testBucket";
-    private static String KEY;
-    private static FloatingAverage FLOATING_AVERAGE_PROTO;
+    private static String KEY = "e85ca376-8d17-493f-826b-1a5a20c88e76";
 
     private BinaryBucket binaryBucket;
     private AmazonS3Client s3Client;
-
-    @BeforeClass
-    public static void setUpData() {
-        KEY = "e85ca376-8d17-493f-826b-1a5a20c88e76";
-        Instant instant = LocalDate.of(2017, 1, 23).atStartOfDay().toInstant(UTC);
-        Quote quote = Quote.newBuilder()
-                .setAverage("123456.431")
-                .setValue("119352.674")
-                .setUpdatedAt(instant.getEpochSecond())
-                .build();
-        FLOATING_AVERAGE_PROTO = FloatingAverage.newBuilder()
-                .setId("bitcoin")
-                .setName("Bitcoin")
-                .setSymbol("BTC")
-                .setAlertState(NONE)
-                .setClosingDate(instant.getEpochSecond())
-                .setCurrentAverage("101010.123")
-                .addQuotes(quote).build();
-    }
+    private FloatingAverage floatingAverage;
 
     @Before
     public void setUp() throws Exception {
         s3Client = mock(AmazonS3Client.class);
         binaryBucket = new BinaryBucket(s3Client, BUCKET_NAME);
+        floatingAverage = createFloatingAverage();
     }
 
     @Test
     public void should_store_content_with_meta_data() throws Exception {
-        S3Content content = newS3Content(KEY, FLOATING_AVERAGE_PROTO.toByteArray(), "binary/octet-stream");
+        S3Content content = newS3Content(KEY, floatingAverage.toByteArray(), "binary/octet-stream");
         ArgumentCaptor<PutObjectRequest> putObjectRequestArgumentCaptor = ArgumentCaptor
                 .forClass(PutObjectRequest.class);
 
@@ -79,7 +56,7 @@ public class BinaryBucketTest {
         ObjectMetadata metadata = putObjectRequest.getMetadata();
         assertThat(metadata.getContentType()).isEqualTo("binary/octet-stream");
         assertThat(metadata.getContentMD5()).isNotEmpty();
-        assertThat(metadata.getContentLength()).isEqualTo(FLOATING_AVERAGE_PROTO.toByteArray().length);
+        assertThat(metadata.getContentLength()).isEqualTo(floatingAverage.toByteArray().length);
     }
 
     @Test
@@ -138,7 +115,7 @@ public class BinaryBucketTest {
         ObjectMetadata metadata = new ObjectMetadata();
         metadata.setContentType("binary/octet-stream");
         s3Object.setObjectMetadata(metadata);
-        try (InputStream inputStream = new ByteArrayInputStream(FLOATING_AVERAGE_PROTO.toByteArray())) {
+        try (InputStream inputStream = new ByteArrayInputStream(floatingAverage.toByteArray())) {
             s3Object.setObjectContent(inputStream);
         }
         return s3Object;
