@@ -40,4 +40,10 @@ public class HexKeyProviderTest {
         assertThatExceptionOfType(IllegalArgumentException.class)
                 .isThrownBy(() -> hexKeyProvider.createKeyFor(null));
     }
+
+    @Test
+    public void should_throw_illegal_argument_exception_if_id_or_symbol_is_null_or_empty() throws Exception {
+        assertThatExceptionOfType(IllegalArgumentException.class)
+                .isThrownBy(() -> hexKeyProvider.createKeyFor("", null));
+    }
 }

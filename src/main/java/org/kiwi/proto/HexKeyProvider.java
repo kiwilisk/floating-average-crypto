@@ -15,7 +15,7 @@ public class HexKeyProvider implements S3KeyProvider {
             throw new IllegalArgumentException("Given FloatingAverage was empty");
         }
         try {
-            return create(floatingAverage.getId(), floatingAverage.getSymbol());
+            return createKeyFor(floatingAverage.getId(), floatingAverage.getSymbol());
         } catch (Exception e) {
             throw new RuntimeException("Failed to create key from " + floatingAverage);
         }
