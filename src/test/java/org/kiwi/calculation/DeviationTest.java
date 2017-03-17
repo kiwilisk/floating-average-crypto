@@ -1,11 +1,10 @@
-package org.kiwi.finance;
-
-import org.junit.Before;
-import org.junit.Test;
-
-import java.math.BigDecimal;
+package org.kiwi.calculation;
 
 import static org.assertj.core.api.Java6Assertions.assertThat;
+
+import java.math.BigDecimal;
+import org.junit.Before;
+import org.junit.Test;
 
 public class DeviationTest {
 

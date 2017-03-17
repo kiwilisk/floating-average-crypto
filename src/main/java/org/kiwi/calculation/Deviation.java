@@ -1,4 +1,4 @@
-package org.kiwi.finance;
+package org.kiwi.calculation;
 
 import static java.math.BigDecimal.ZERO;
 import static java.math.RoundingMode.CEILING;
@@ -9,7 +9,7 @@ class Deviation {
 
     private final static BigDecimal HUNDRED = new BigDecimal("100");
 
-    public BigDecimal calculate(BigDecimal currentAverage, BigDecimal currentClosingQuote) {
+    BigDecimal calculate(BigDecimal currentAverage, BigDecimal currentClosingQuote) {
         if (currentClosingQuote == null || ZERO.equals(currentClosingQuote)) {
             return ZERO;
         }
@@ -22,9 +22,5 @@ class Deviation {
                 .divide(currentClosingQuote, CEILING)
                 .subtract(HUNDRED)
                 .abs();
-    }
-
-    private boolean isThresholdExceeded(BigDecimal deviation, BigDecimal percentageThreshold) {
-        return deviation.compareTo(percentageThreshold) >= 0;
     }
 }

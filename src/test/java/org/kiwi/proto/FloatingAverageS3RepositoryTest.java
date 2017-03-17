@@ -14,9 +14,9 @@ import org.kiwi.aws.s3.S3Bucket;
 import org.kiwi.aws.s3.S3Content;
 import org.kiwi.proto.FloatingAverageProtos.FloatingAverage;
 
-public class FloatingAverageRepositoryTest {
+public class FloatingAverageS3RepositoryTest {
 
-    private FloatingAverageRepository floatingAverageRepository;
+    private FloatingAverageS3Repository floatingAverageS3Repository;
     private FloatingAverage floatingAverage;
     private S3Bucket s3Bucket;
     private S3KeyProvider keyProvider;
@@ -25,7 +25,7 @@ public class FloatingAverageRepositoryTest {
     public void setUp() throws Exception {
         s3Bucket = mock(S3Bucket.class);
         keyProvider = mock(S3KeyProvider.class);
-        floatingAverageRepository = new FloatingAverageRepository(s3Bucket, keyProvider);
+        floatingAverageS3Repository = new FloatingAverageS3Repository(s3Bucket, keyProvider);
         floatingAverage = createFloatingAverage();
     }
 
@@ -35,7 +35,7 @@ public class FloatingAverageRepositoryTest {
         when(keyProvider.createKeyFor("id", "symbol")).thenReturn(Optional.of("valid_key"));
         when(s3Bucket.retrieveContentFor("valid_key")).thenReturn(floatingAverage.toByteArray());
 
-        Optional<FloatingAverage> loadedFloatingAverage = floatingAverageRepository.load("id", "symbol");
+        Optional<FloatingAverage> loadedFloatingAverage = floatingAverageS3Repository.load("id", "symbol");
 
         verify(s3Bucket).retrieveContentFor("valid_key");
         assertThat(loadedFloatingAverage.get()).isEqualTo(floatingAverage);
@@ -47,7 +47,7 @@ public class FloatingAverageRepositoryTest {
         when(keyProvider.createKeyFor(floatingAverage)).thenReturn(Optional.of(key));
         S3Content expectedContent = newS3Content(key, floatingAverage.toByteArray(), "binary/octet-stream");
 
-        floatingAverageRepository.store(floatingAverage);
+        floatingAverageS3Repository.store(floatingAverage);
 
         verify(s3Bucket).storeContent(expectedContent);
     }

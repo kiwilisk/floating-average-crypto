@@ -7,9 +7,9 @@ import static java.math.RoundingMode.CEILING;
 import java.math.BigDecimal;
 import java.util.Collection;
 
-public class Average {
+class Average {
 
-    public BigDecimal calculateFor(Collection<BigDecimal> values) {
+    BigDecimal calculateFor(Collection<BigDecimal> values) {
         if (values.isEmpty()) {
             return BigDecimal.ZERO;
         }
