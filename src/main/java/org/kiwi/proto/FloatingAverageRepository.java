@@ -1,11 +1,10 @@
 package org.kiwi.proto;
 
-import java.util.Optional;
 import org.kiwi.proto.FloatingAverageProtos.FloatingAverage;
 
 public interface FloatingAverageRepository {
 
-    Optional<FloatingAverage> load(String id, String symbol);
+    FloatingAverage load(String id);
 
     void store(FloatingAverage floatingAverage);
 

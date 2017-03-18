@@ -1,6 +1,7 @@
 package org.kiwi.calculation;
 
 import static org.kiwi.proto.FloatingAverageProtos.FloatingAverage.AlertState.BUY;
+import static org.kiwi.proto.FloatingAverageProtos.FloatingAverage.AlertState.NONE;
 import static org.kiwi.proto.FloatingAverageProtos.FloatingAverage.AlertState.SELL;
 
 import java.math.BigDecimal;
@@ -8,17 +9,16 @@ import org.kiwi.proto.FloatingAverageProtos.FloatingAverage.AlertState;
 
 class AverageAlert {
 
-    AlertState evaluateStateWith(CalculationData calculationData) {
-        BigDecimal deviation = calculateDeviation(calculationData);
-        if (isThresholdExceeded(deviation, calculationData.deviationThreshold())) {
-            return isValueHigherThanAverage(calculationData.currencyValue(),
-                    calculationData.currentAverage()) ? BUY : SELL;
+    AlertState evaluateStateWith(BigDecimal average, BigDecimal currencyValue, BigDecimal percentageThreshold) {
+        BigDecimal deviation = calculateDeviation(average, currencyValue);
+        if (isThresholdExceeded(deviation, percentageThreshold)) {
+            return isValueHigherThanAverage(currencyValue, average) ? BUY : SELL;
         }
-        return calculationData.floatingAverage().getAlertState();
+        return NONE;
     }
 
-    private BigDecimal calculateDeviation(CalculationData calculationData) {
-        return new Deviation().calculate(calculationData.currentAverage(), calculationData.currencyValue());
+    private BigDecimal calculateDeviation(BigDecimal currentAverage, BigDecimal currentClosingQuote) {
+        return new Deviation().calculate(currentAverage, currentClosingQuote);
     }
 
     private static boolean isThresholdExceeded(BigDecimal deviation, BigDecimal percentageThreshold) {

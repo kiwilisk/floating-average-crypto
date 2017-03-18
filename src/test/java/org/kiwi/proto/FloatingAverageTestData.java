@@ -21,20 +21,20 @@ public class FloatingAverageTestData {
                 .setSymbol("BTC")
                 .setAlertState(NONE)
                 .setClosingDate(DATE_AS_EPOCH_SECOND)
-                .setCurrentAverage("101010.123")
+                .setCurrentAverage("1229.68")
                 .addAllQuotes(createQuotes())
                 .build();
     }
 
     private static Collection<Quote> createQuotes() {
         Quote quote1 = Quote.newBuilder()
-                .setAverage("123456.431")
-                .setValue("119352.674")
+                .setAverage("1199.67")
+                .setValue("1201.75")
                 .setUpdatedAt(DATE_AS_EPOCH_SECOND)
                 .build();
         Quote quote2 = Quote.newBuilder()
-                .setAverage("132145.320")
-                .setValue("108241.563")
+                .setAverage("1189.92")
+                .setValue("1210.02")
                 .setUpdatedAt(DATE_AS_EPOCH_SECOND)
                 .build();
         return asList(quote1, quote2);

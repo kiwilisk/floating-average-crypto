@@ -7,7 +7,6 @@ import static org.mockito.Mockito.mock;
 import static org.mockito.Mockito.verify;
 import static org.mockito.Mockito.when;
 
-import java.util.Optional;
 import org.junit.Before;
 import org.junit.Test;
 import org.kiwi.aws.s3.S3Bucket;
@@ -29,22 +28,21 @@ public class FloatingAverageS3RepositoryTest {
         floatingAverage = createFloatingAverage();
     }
 
-    @SuppressWarnings("OptionalGetWithoutIsPresent")
     @Test
     public void should_load_with_key_from_key_provider() throws Exception {
-        when(keyProvider.createKeyFor("id", "symbol")).thenReturn(Optional.of("valid_key"));
+        when(keyProvider.createKeyFor("id")).thenReturn("valid_key");
         when(s3Bucket.retrieveContentFor("valid_key")).thenReturn(floatingAverage.toByteArray());
 
-        Optional<FloatingAverage> loadedFloatingAverage = floatingAverageS3Repository.load("id", "symbol");
+        FloatingAverage loadedFloatingAverage = floatingAverageS3Repository.load("id");
 
         verify(s3Bucket).retrieveContentFor("valid_key");
-        assertThat(loadedFloatingAverage.get()).isEqualTo(floatingAverage);
+        assertThat(loadedFloatingAverage).isEqualTo(floatingAverage);
     }
 
     @Test
     public void should_store_binary_object_with_key_from_provider() throws Exception {
         String key = "this_is_a_valid_key";
-        when(keyProvider.createKeyFor(floatingAverage)).thenReturn(Optional.of(key));
+        when(keyProvider.createKeyFor(floatingAverage.getId())).thenReturn(key);
         S3Content expectedContent = newS3Content(key, floatingAverage.toByteArray(), "binary/octet-stream");
 
         floatingAverageS3Repository.store(floatingAverage);
