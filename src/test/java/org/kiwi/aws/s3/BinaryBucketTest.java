@@ -4,7 +4,7 @@ package org.kiwi.aws.s3;
 import static org.assertj.core.api.Assertions.assertThat;
 import static org.assertj.core.api.Assertions.assertThatExceptionOfType;
 import static org.kiwi.aws.s3.S3Content.newS3Content;
-import static org.kiwi.proto.FloatingAverageTestData.createFloatingAverage;
+import static org.kiwi.proto.FloatingAverageTestData.createBitcoinTestData;
 import static org.mockito.Matchers.any;
 import static org.mockito.Mockito.doThrow;
 import static org.mockito.Mockito.mock;
@@ -39,7 +39,7 @@ public class BinaryBucketTest {
     public void setUp() throws Exception {
         s3Client = mock(AmazonS3Client.class);
         binaryBucket = new BinaryBucket(s3Client, BUCKET_NAME);
-        floatingAverage = createFloatingAverage();
+        floatingAverage = createBitcoinTestData();
     }
 
     @Test

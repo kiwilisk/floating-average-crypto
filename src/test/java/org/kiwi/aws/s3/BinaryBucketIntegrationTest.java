@@ -3,7 +3,7 @@ package org.kiwi.aws.s3;
 import static com.amazonaws.regions.Regions.EU_CENTRAL_1;
 import static org.assertj.core.api.Assertions.assertThat;
 import static org.kiwi.aws.s3.S3Content.newS3Content;
-import static org.kiwi.proto.FloatingAverageTestData.createFloatingAverage;
+import static org.kiwi.proto.FloatingAverageTestData.createBitcoinTestData;
 
 import com.amazonaws.auth.AWSCredentials;
 import com.amazonaws.auth.AWSCredentialsProvider;
@@ -39,7 +39,7 @@ public class BinaryBucketIntegrationTest {
 
     @Test
     public void should_store_and_retrieve_protobuf() throws Exception {
-        FloatingAverage floatingAverage = createFloatingAverage();
+        FloatingAverage floatingAverage = createBitcoinTestData();
         S3Content s3Content = newS3Content(TEST_CONTENT_KEY, floatingAverage.toByteArray(), BINARY_CONTENT_TYPE);
 
         binaryBucket.storeContent(s3Content);
