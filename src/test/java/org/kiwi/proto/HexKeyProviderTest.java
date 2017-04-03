@@ -7,7 +7,6 @@ import static org.assertj.core.api.Assertions.assertThatExceptionOfType;
 import org.junit.Before;
 import org.junit.Test;
 
-@SuppressWarnings("OptionalGetWithoutIsPresent")
 public class HexKeyProviderTest {
 
     private HexKeyProvider hexKeyProvider;
@@ -21,9 +20,8 @@ public class HexKeyProviderTest {
     public void should_create_hex_key_from_id() throws Exception {
         String key = hexKeyProvider.createKeyFor("bitcoin");
 
-        assertThat(key).isEqualTo("626974636f696e5f425443");
+        assertThat(key).isEqualTo("626974636f696e_bitcoin");
     }
-
 
     @Test
     public void should_throw_illegal_argument_exception_if_id_is_null() throws Exception {

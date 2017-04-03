@@ -2,6 +2,7 @@ package org.kiwi.calculation;
 
 import static java.time.ZoneOffset.UTC;
 import static java.util.Collections.singleton;
+import static java.util.Collections.singletonList;
 import static org.kiwi.crypto.currency.Currency.newCurrency;
 import static org.kiwi.proto.FloatingAverageProtos.FloatingAverage.AlertState.NONE;
 import static org.mockito.Mockito.mock;
@@ -19,7 +20,7 @@ import org.kiwi.proto.FloatingAverageProtos.Quote;
 import org.kiwi.proto.FloatingAverageRepository;
 import org.kiwi.proto.FloatingAverageTestData;
 
-public class FloatingAverageJobTest {
+public class FloatingAverageJobIntegrationTest {
 
     private CurrencyRepository currencyRepository;
     private FloatingAverageJob job;
@@ -54,13 +55,13 @@ public class FloatingAverageJobTest {
 
         job.execute();
 
-        verify(floatingAverageRepository).store(etherumFloatingAverage);
+        verify(floatingAverageRepository).store(singletonList(etherumFloatingAverage));
     }
 
     @Test
     public void should_calculate_and_store_new_average_from_currency_and_historic_values() throws Exception {
-        FloatingAverage bitcoinAverage = FloatingAverageTestData.createFloatingAverage();
-        when(floatingAverageRepository.load("bitcoin")).thenReturn(bitcoinAverage);
+        FloatingAverage bitcoinAverage = FloatingAverageTestData.createBitcoinTestData();
+        when(floatingAverageRepository.load(singleton("bitcoin"))).thenReturn(singletonList(bitcoinAverage));
         Currency bitcoin = newCurrency("bitcoin", "Bitcoin", "BTC", new BigDecimal("1229.68"),
                 LocalDate.of(2017, 1, 23).atStartOfDay().toInstant(UTC));
         when(currencyRepository.retrieveCurrencies()).thenReturn(singleton(bitcoin));
@@ -76,6 +77,6 @@ public class FloatingAverageJobTest {
 
         job.execute();
 
-        verify(floatingAverageRepository).store(expectedBitcoinAverage);
+        verify(floatingAverageRepository).store(singletonList(expectedBitcoinAverage));
     }
 }

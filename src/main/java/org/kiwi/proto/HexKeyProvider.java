@@ -6,13 +6,15 @@ import static org.apache.commons.codec.binary.Hex.encodeHexString;
 
 public class HexKeyProvider implements S3KeyProvider {
 
+    private static final String SEPARATOR = "_";
+
     @Override
     public String createKeyFor(String id) {
         if (isNullOrEmpty(id)) {
             throw new IllegalArgumentException("Given FloatingAverage was empty");
         }
         try {
-            return encodeHexString(id.getBytes(UTF_8));
+            return encodeHexString(id.getBytes(UTF_8)).concat(SEPARATOR).concat(id);
         } catch (Exception e) {
             throw new RuntimeException("Failed to create key for [" + id + "]");
         }
