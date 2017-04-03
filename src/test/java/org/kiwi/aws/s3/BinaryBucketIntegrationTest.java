@@ -43,9 +43,10 @@ public class BinaryBucketIntegrationTest {
         S3Content s3Content = newS3Content(TEST_CONTENT_KEY, floatingAverage.toByteArray(), BINARY_CONTENT_TYPE);
 
         binaryBucket.storeContent(s3Content);
-        byte[] bytes = binaryBucket.retrieveContentFor(TEST_CONTENT_KEY);
-        FloatingAverage loadedFloatingAverage = FloatingAverage.parseFrom(bytes);
+        S3Content loadedContent = binaryBucket.retrieveContentFor(TEST_CONTENT_KEY);
 
+        FloatingAverage loadedFloatingAverage = FloatingAverage.parseFrom(loadedContent.bytes());
         assertThat(loadedFloatingAverage).isEqualTo(floatingAverage);
+        assertThat(s3Content).isEqualTo(loadedContent);
     }
 }

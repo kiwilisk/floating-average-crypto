@@ -55,7 +55,7 @@ public class FloatingAverageJobIntegrationTest {
 
         job.execute();
 
-        verify(floatingAverageRepository).store(singletonList(etherumFloatingAverage));
+        verify(floatingAverageRepository).store(singleton(etherumFloatingAverage));
     }
 
     @Test
@@ -77,6 +77,6 @@ public class FloatingAverageJobIntegrationTest {
 
         job.execute();
 
-        verify(floatingAverageRepository).store(singletonList(expectedBitcoinAverage));
+        verify(floatingAverageRepository).store(singleton(expectedBitcoinAverage));
     }
 }

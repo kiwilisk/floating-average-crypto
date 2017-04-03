@@ -35,7 +35,7 @@ public class FloatingAverageS3Repository implements FloatingAverageRepository {
     @Override
     public FloatingAverage load(String id) {
         String key = keyProvider.createKeyFor(id);
-        byte[] bytes = s3Bucket.retrieveContentFor(key);
+        byte[] bytes = s3Bucket.retrieveContentFor(key).bytes();
         return toFloatingAverage(bytes);
     }
 

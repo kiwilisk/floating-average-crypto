@@ -4,5 +4,5 @@ public interface S3Bucket {
 
     void storeContent(S3Content content);
 
-    byte[] retrieveContentFor(String key);
+    S3Content retrieveContentFor(String key);
 }

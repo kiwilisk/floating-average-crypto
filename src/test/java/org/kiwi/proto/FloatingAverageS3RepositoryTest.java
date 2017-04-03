@@ -36,7 +36,8 @@ public class FloatingAverageS3RepositoryTest {
     @Test
     public void should_load_with_key_from_key_provider() throws Exception {
         when(keyProvider.createKeyFor("id")).thenReturn("valid_key");
-        when(s3Bucket.retrieveContentFor("valid_key")).thenReturn(bitcoinAverage.toByteArray());
+        S3Content content = newS3Content("valid_key", bitcoinAverage.toByteArray(), "binary/octet-stream");
+        when(s3Bucket.retrieveContentFor("valid_key")).thenReturn(content);
 
         FloatingAverage loadedFloatingAverage = floatingAverageS3Repository.load("id");
 
@@ -76,8 +77,11 @@ public class FloatingAverageS3RepositoryTest {
         FloatingAverage etverageumAverage = createEthereumTestData();
         when(keyProvider.createKeyFor("ethereum")).thenReturn("ethereum_key");
         when(keyProvider.createKeyFor("bitcoin")).thenReturn("bitcoin_key");
-        when(s3Bucket.retrieveContentFor("ethereum_key")).thenReturn(etverageumAverage.toByteArray());
-        when(s3Bucket.retrieveContentFor("bitcoin_key")).thenReturn(bitcoinAverage.toByteArray());
+        S3Content ethereumContent = newS3Content("ethereum_key", etverageumAverage.toByteArray(),
+                "binary/octet-stream");
+        S3Content bitcoinContent = newS3Content("bitcoin_key", bitcoinAverage.toByteArray(), "binary/octet-stream");
+        when(s3Bucket.retrieveContentFor("ethereum_key")).thenReturn(ethereumContent);
+        when(s3Bucket.retrieveContentFor("bitcoin_key")).thenReturn(bitcoinContent);
 
         Collection<FloatingAverage> loadedAverages = floatingAverageS3Repository.load(asList("bitcoin", "ethereum"));
 

@@ -73,6 +73,17 @@ public class BinaryBucketTest {
     }
 
     @Test
+    public void should_throw_exception_on_non_existing_object() throws Exception {
+        when(s3Client.doesObjectExist(BUCKET_NAME, KEY)).thenReturn(false);
+
+        assertThatExceptionOfType(RuntimeException.class)
+                .isThrownBy(() -> binaryBucket.retrieveContentFor(KEY))
+                .withMessage("Failed to load object with key [e85ca376-8d17-493f-826b-1a5a20c88e76] "
+                        + "from bucket [testBucket]");
+
+    }
+
+    @Test
     public void should_propagate_exception_during_storage() throws Exception {
         S3Content content = newS3Content(KEY, new byte[]{1}, "binary/octet-stream");
         doThrow(new RuntimeException())

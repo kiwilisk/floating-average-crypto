@@ -41,7 +41,7 @@ public class BinaryBucket implements S3Bucket {
     }
 
     @Override
-    public byte[] retrieveContentFor(String key) {
+    public S3Content retrieveContentFor(String key) {
         if (isNullOrEmpty(key)) {
             throw new IllegalArgumentException("Key must not be null or empty");
         }
@@ -70,11 +70,13 @@ public class BinaryBucket implements S3Bucket {
         }
     }
 
-    private byte[] retrieveWith(String key) throws IOException {
+    private S3Content retrieveWith(String key) throws IOException {
         if (s3Client.doesObjectExist(bucketName, key)) {
             GetObjectRequest getObjectRequest = new GetObjectRequest(bucketName, key);
             S3Object s3Object = s3Client.getObject(getObjectRequest);
-            return getBytesOf(s3Object);
+            byte[] bytes = getBytesOf(s3Object);
+            String contentType = s3Object.getObjectMetadata().getContentType();
+            return S3Content.newS3Content(key, bytes, contentType);
         }
         throw new RuntimeException("Failed to retrieve Object with key [" + key + "] "
                 + "from [" + bucketName + "]. Object does not exist.");
