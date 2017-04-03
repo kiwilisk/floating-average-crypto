@@ -19,8 +19,9 @@ message FloatingAverage {
   string id = 1;
   string name = 2;
   string symbol = 3;
-  repeated Quote quotes = 4;
-  string currentAverage = 5;
-  int64 closingDate = 6;
-  AlertState alertState = 7;
+  int32 maxDaysCap = 4;
+  repeated Quote quotes = 5;
+  string currentAverage = 6;
+  int64 closingDate = 7;
+  AlertState alertState = 8;
 }
