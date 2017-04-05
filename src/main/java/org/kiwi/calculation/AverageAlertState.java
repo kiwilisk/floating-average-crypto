@@ -7,7 +7,7 @@ import static org.kiwi.proto.FloatingAverageProtos.FloatingAverage.AlertState.SE
 import java.math.BigDecimal;
 import org.kiwi.proto.FloatingAverageProtos.FloatingAverage.AlertState;
 
-class AverageAlert {
+class AverageAlertState {
 
     AlertState evaluateStateWith(BigDecimal average, BigDecimal currencyValue, BigDecimal percentageThreshold) {
         BigDecimal deviation = calculateDeviation(average, currencyValue);

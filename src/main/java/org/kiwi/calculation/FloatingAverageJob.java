@@ -17,12 +17,15 @@ public class FloatingAverageJob {
 
     private final CurrencyRepository currencyRepository;
     private final FloatingAverageRepository floatingAverageRepository;
+    private final FloatingAverageCalculator floatingAverageCalculator;
 
     @Inject
     public FloatingAverageJob(CurrencyRepository currencyRepository,
-            FloatingAverageRepository floatingAverageRepository) {
+            FloatingAverageRepository floatingAverageRepository,
+            FloatingAverageCalculator floatingAverageCalculator) {
         this.currencyRepository = currencyRepository;
         this.floatingAverageRepository = floatingAverageRepository;
+        this.floatingAverageCalculator = floatingAverageCalculator;
     }
 
     public void execute() {
@@ -38,18 +41,18 @@ public class FloatingAverageJob {
                 .collect(toMap(FloatingAverage::getId, floatingAverage -> floatingAverage));
     }
 
-    private static Collection<FloatingAverage> calculateLatestAveragesWith(Collection<Currency> currencies,
+    private Collection<FloatingAverage> calculateLatestAveragesWith(Collection<Currency> currencies,
             Map<String, FloatingAverage> idToAverage) {
         return currencies.parallelStream()
                 .map(toLatestFloatingAverage(idToAverage))
                 .collect(toSet());
     }
 
-    private static Function<Currency, FloatingAverage> toLatestFloatingAverage(
+    private Function<Currency, FloatingAverage> toLatestFloatingAverage(
             Map<String, FloatingAverage> idToAverage) {
         return currency -> {
             FloatingAverage floatingAverage = idToAverage.get(currency.id());
-            return new HistoricalQuotesAverage(currency, floatingAverage).calculate();
+            return floatingAverageCalculator.calculate(currency, floatingAverage);
         };
     }
 }
