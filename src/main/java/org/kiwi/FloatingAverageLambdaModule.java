@@ -1,13 +1,12 @@
 package org.kiwi;
 
-import static com.amazonaws.regions.Regions.EU_CENTRAL_1;
 import static com.fasterxml.jackson.databind.SerializationFeature.WRITE_DATES_AS_TIMESTAMPS;
 import static com.google.inject.name.Names.bindProperties;
 
-import com.amazonaws.regions.Region;
-import com.amazonaws.services.s3.AmazonS3Client;
-import com.amazonaws.services.sns.AmazonSNSAsyncClient;
-import com.amazonaws.services.sns.AmazonSNSClient;
+import com.amazonaws.services.s3.AmazonS3;
+import com.amazonaws.services.s3.AmazonS3ClientBuilder;
+import com.amazonaws.services.sns.AmazonSNS;
+import com.amazonaws.services.sns.AmazonSNSClientBuilder;
 import com.fasterxml.jackson.databind.ObjectMapper;
 import com.fasterxml.jackson.datatype.jdk8.Jdk8Module;
 import com.fasterxml.jackson.datatype.jsr310.JavaTimeModule;
@@ -73,16 +72,14 @@ public class FloatingAverageLambdaModule extends AbstractModule {
 
     @Provides
     @Singleton
-    public AmazonSNSClient amazonSNSClient() {
-        return new AmazonSNSAsyncClient()
-                .<AmazonSNSAsyncClient>withRegion(Region.getRegion(EU_CENTRAL_1));
+    public AmazonSNS amazonSNSClient() {
+        return AmazonSNSClientBuilder.defaultClient();
     }
 
     @Provides
     @Singleton
-    public AmazonS3Client s3Client() {
-        return new AmazonS3Client()
-                .withRegion(Region.getRegion(EU_CENTRAL_1));
+    public AmazonS3 s3Client() {
+        return AmazonS3ClientBuilder.defaultClient();
     }
 
     private Properties loadProperties() {

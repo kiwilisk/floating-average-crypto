@@ -1,14 +1,11 @@
 package org.kiwi.aws.s3;
 
-import static com.amazonaws.regions.Regions.EU_CENTRAL_1;
 import static org.assertj.core.api.Assertions.assertThat;
 import static org.kiwi.aws.s3.S3Content.newS3Content;
 import static org.kiwi.proto.FloatingAverageTestData.createBitcoinTestData;
 
-import com.amazonaws.auth.AWSCredentials;
-import com.amazonaws.auth.AWSCredentialsProvider;
-import com.amazonaws.auth.profile.ProfileCredentialsProvider;
-import com.amazonaws.services.s3.AmazonS3Client;
+import com.amazonaws.services.s3.AmazonS3;
+import com.amazonaws.services.s3.AmazonS3ClientBuilder;
 import com.amazonaws.services.s3.model.DeleteObjectRequest;
 import org.junit.After;
 import org.junit.Before;
@@ -22,13 +19,11 @@ public class BinaryBucketIntegrationTest {
     private static final String BINARY_CONTENT_TYPE = "binary/octet-stream";
 
     private BinaryBucket binaryBucket;
-    private AmazonS3Client s3Client;
+    private AmazonS3 s3Client;
 
     @Before
     public void setUp() throws Exception {
-        AWSCredentialsProvider credentialsProvider = new ProfileCredentialsProvider();
-        AWSCredentials credentials = credentialsProvider.getCredentials();
-        s3Client = new AmazonS3Client(credentials).withRegion(EU_CENTRAL_1);
+        s3Client = AmazonS3ClientBuilder.defaultClient();
         binaryBucket = new BinaryBucket(s3Client, BUCKET_NAME);
     }
 

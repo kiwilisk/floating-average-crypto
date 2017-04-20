@@ -4,7 +4,7 @@ import static com.amazonaws.util.Md5Utils.md5AsBase64;
 import static com.google.common.base.Strings.isNullOrEmpty;
 import static com.google.common.io.ByteStreams.toByteArray;
 
-import com.amazonaws.services.s3.AmazonS3Client;
+import com.amazonaws.services.s3.AmazonS3;
 import com.amazonaws.services.s3.model.GetObjectRequest;
 import com.amazonaws.services.s3.model.ObjectMetadata;
 import com.amazonaws.services.s3.model.PutObjectRequest;
@@ -18,11 +18,11 @@ import java.util.Arrays;
 
 public class BinaryBucket implements S3Bucket {
 
-    private final AmazonS3Client s3Client;
+    private final AmazonS3 s3Client;
     private final String bucketName;
 
     @Inject
-    public BinaryBucket(AmazonS3Client amazonS3Client, @Named("aws.s3.bucket.name") String bucketName) {
+    public BinaryBucket(AmazonS3 amazonS3Client, @Named("aws.s3.bucket.name") String bucketName) {
         this.s3Client = amazonS3Client;
         this.bucketName = bucketName;
     }
