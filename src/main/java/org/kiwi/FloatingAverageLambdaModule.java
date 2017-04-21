@@ -7,6 +7,7 @@ import com.amazonaws.services.s3.AmazonS3;
 import com.amazonaws.services.s3.AmazonS3ClientBuilder;
 import com.amazonaws.services.sns.AmazonSNS;
 import com.amazonaws.services.sns.AmazonSNSClientBuilder;
+import com.fasterxml.jackson.core.type.TypeReference;
 import com.fasterxml.jackson.databind.ObjectMapper;
 import com.fasterxml.jackson.datatype.jdk8.Jdk8Module;
 import com.fasterxml.jackson.datatype.jsr310.JavaTimeModule;
@@ -14,11 +15,15 @@ import com.google.inject.AbstractModule;
 import com.google.inject.Provides;
 import com.google.inject.Singleton;
 import com.google.inject.TypeLiteral;
+import java.io.IOException;
 import java.io.InputStream;
 import java.time.Clock;
+import java.util.HashMap;
 import java.util.Properties;
 import org.kiwi.aws.s3.BinaryBucket;
 import org.kiwi.aws.s3.S3Bucket;
+import org.kiwi.config.Configuration;
+import org.kiwi.config.ConfigurationLoader;
 import org.kiwi.crypto.api.CoinMarketCap;
 import org.kiwi.crypto.api.CoinMarketCapRepository;
 import org.kiwi.crypto.api.CurrencyRepository;
@@ -34,10 +39,11 @@ import org.kiwi.rest.UnirestClient;
 public class FloatingAverageLambdaModule extends AbstractModule {
 
     private static final String CONFIG_PROPERTIES = "/config.properties";
+    private static final String CURRENCY_CONFIG = "/currency.json";
 
     @Override
     protected void configure() {
-        bindProperties(binder(), loadProperties());
+        bindProperties(binder(), loadProperties(CONFIG_PROPERTIES));
         bind(CurrencyRepository.class)
                 .annotatedWith(CoinMarketCap.class)
                 .to(CoinMarketCapRepository.class);
@@ -82,15 +88,30 @@ public class FloatingAverageLambdaModule extends AbstractModule {
         return AmazonS3ClientBuilder.defaultClient();
     }
 
-    private Properties loadProperties() {
+    @Provides
+    @Singleton
+    public ConfigurationLoader configurationLoader(ObjectMapper objectMapper) {
+        TypeReference<HashMap<String, Configuration>> stringToConfigTypeRef
+                = new TypeReference<HashMap<String, Configuration>>() {
+        };
+        try (InputStream currencyConfigStream = getClass().getResourceAsStream(CURRENCY_CONFIG)) {
+            HashMap<String, Configuration> currencyIdToConfig = objectMapper
+                    .readValue(currencyConfigStream, stringToConfigTypeRef);
+            return new ConfigurationLoader(currencyIdToConfig);
+        } catch (IOException e) {
+            throw new RuntimeException("Failed to load currency configuration from file [" + CURRENCY_CONFIG + "]");
+        }
+    }
+
+    private Properties loadProperties(String propertiesFile) {
         try {
             Properties properties = new Properties();
-            try (InputStream inputStream = getClass().getResourceAsStream(CONFIG_PROPERTIES)) {
+            try (InputStream inputStream = getClass().getResourceAsStream(propertiesFile)) {
                 properties.load(inputStream);
                 return properties;
             }
         } catch (Exception e) {
-            throw new RuntimeException("Failed to load properties from file [" + CONFIG_PROPERTIES + "]", e);
+            throw new RuntimeException("Failed to load properties from file [" + propertiesFile + "]", e);
         }
     }
 }

@@ -1,11 +1,10 @@
 package org.kiwi;
 
-import com.google.inject.Injector;
-
-import org.junit.Test;
-
 import static com.google.inject.Guice.createInjector;
 import static org.assertj.core.api.Assertions.assertThat;
+
+import com.google.inject.Injector;
+import org.junit.Test;
 
 public class FloatingAverageLambdaModuleTest {
 

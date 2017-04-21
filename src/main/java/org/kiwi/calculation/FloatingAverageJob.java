@@ -36,7 +36,9 @@ public class FloatingAverageJob {
     }
 
     private Map<String, FloatingAverage> loadAveragesAndGroupById(Collection<Currency> currencies) {
-        Set<String> idSet = currencies.stream().map(Currency::id).collect(toSet());
+        Set<String> idSet = currencies.stream()
+                .map(Currency::id)
+                .collect(toSet());
         return floatingAverageRepository.load(idSet).stream()
                 .collect(toMap(FloatingAverage::getId, floatingAverage -> floatingAverage));
     }

@@ -8,12 +8,22 @@ import java.math.BigDecimal;
 import java.util.ArrayList;
 import java.util.Collection;
 import java.util.List;
+import javax.inject.Inject;
+import org.kiwi.config.Configuration;
+import org.kiwi.config.ConfigurationLoader;
 import org.kiwi.crypto.currency.Currency;
 import org.kiwi.proto.FloatingAverageProtos.FloatingAverage;
 import org.kiwi.proto.FloatingAverageProtos.FloatingAverage.AlertState;
 import org.kiwi.proto.FloatingAverageProtos.Quote;
 
 class FloatingAverageCalculator {
+
+    private final ConfigurationLoader configurationLoader;
+
+    @Inject
+    FloatingAverageCalculator(ConfigurationLoader configurationLoader) {
+        this.configurationLoader = configurationLoader;
+    }
 
     FloatingAverage calculate(Currency currency, FloatingAverage floatingAverage) {
         BigDecimal latestValue = currency.priceInUsDollar();
@@ -22,7 +32,9 @@ class FloatingAverageCalculator {
         BigDecimal latestAverage = calculateLatestAverageWith(latestValue, historicalQuotes);
         Quote latestQuote = createQuoteWith(latestValue, latestAverage, dateInEpochSeconds);
         historicalQuotes.add(latestQuote);
-        AlertState state = new AverageAlertState().evaluateStateWith(latestAverage, latestValue, new BigDecimal("4.0"));
+        Configuration configuration = configurationLoader.loadFor(currency.id());
+        AlertState state = new AverageAlertState()
+                .evaluateStateWith(latestAverage, latestValue, configuration.deviationThreshold());
 
         return newBuilder()
                 .setId(currency.id())
@@ -30,6 +42,7 @@ class FloatingAverageCalculator {
                 .setName(currency.name())
                 .setClosingDate(dateInEpochSeconds)
                 .setCurrentAverage(latestAverage.toPlainString())
+                .setMaxDaysCap(configuration.maxDaysCap())
                 .addAllQuotes(historicalQuotes)
                 .setAlertState(state)
                 .build();

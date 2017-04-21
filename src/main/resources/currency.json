@@ -1,0 +1,10 @@
+{
+  "default": {
+    "deviationThreshold": 4.0,
+    "maxDaysCap": 200
+  },
+  "bitcoin": {
+    "deviationThreshold": 4.0,
+    "maxDaysCap": 200
+  }
+}

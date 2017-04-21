@@ -3,16 +3,21 @@ package org.kiwi.calculation;
 
 import static java.time.ZoneOffset.UTC;
 import static org.assertj.core.api.Assertions.assertThat;
+import static org.kiwi.config.Configuration.newConfiguration;
 import static org.kiwi.crypto.currency.Currency.newCurrency;
 import static org.kiwi.proto.FloatingAverageProtos.FloatingAverage.AlertState.NONE;
 import static org.kiwi.proto.FloatingAverageProtos.FloatingAverage.newBuilder;
 import static org.kiwi.proto.FloatingAverageTestData.createBitcoinTestData;
 import static org.kiwi.proto.FloatingAverageTestData.createEthereumTestData;
+import static org.mockito.Matchers.anyString;
+import static org.mockito.Mockito.mock;
+import static org.mockito.Mockito.when;
 
 import java.math.BigDecimal;
 import java.time.LocalDate;
 import org.junit.Before;
 import org.junit.Test;
+import org.kiwi.config.ConfigurationLoader;
 import org.kiwi.crypto.currency.Currency;
 import org.kiwi.proto.FloatingAverageProtos.FloatingAverage;
 import org.kiwi.proto.FloatingAverageProtos.Quote;
@@ -23,7 +28,9 @@ public class FloatingAverageCalculatorTest {
 
     @Before
     public void setUp() throws Exception {
-        calculator = new FloatingAverageCalculator();
+        ConfigurationLoader configurationLoader = mock(ConfigurationLoader.class);
+        when(configurationLoader.loadFor(anyString())).thenReturn(newConfiguration(new BigDecimal("4.0"), 200));
+        calculator = new FloatingAverageCalculator(configurationLoader);
     }
 
     @Test
@@ -47,6 +54,7 @@ public class FloatingAverageCalculatorTest {
                 .setSymbol("ETH")
                 .setAlertState(NONE)
                 .setClosingDate(1485129600)
+                .setMaxDaysCap(200)
                 .setCurrentAverage("18.2812")
                 .addQuotes(etherumQuote)
                 .build();
@@ -69,6 +77,7 @@ public class FloatingAverageCalculatorTest {
                 .setCurrentAverage("1213.82")
                 .setClosingDate(1485129600)
                 .addQuotes(expectedNewQuote)
+                .setMaxDaysCap(200)
                 .build();
         assertThat(latestAverage).isEqualTo(expectedAverage);
     }
