@@ -15,6 +15,7 @@ import org.junit.Before;
 import org.junit.Test;
 import org.kiwi.aws.s3.S3Bucket;
 import org.kiwi.aws.s3.S3Content;
+import org.kiwi.aws.s3.S3KeyProvider;
 import org.kiwi.proto.FloatingAverageProtos.FloatingAverage;
 import org.mockito.ArgumentCaptor;
 

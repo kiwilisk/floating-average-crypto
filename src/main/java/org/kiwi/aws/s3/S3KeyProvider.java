@@ -1,4 +1,4 @@
-package org.kiwi.proto;
+package org.kiwi.aws.s3;
 
 public interface S3KeyProvider {
 

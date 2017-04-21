@@ -16,6 +16,7 @@ import java.util.function.Function;
 import org.apache.log4j.Logger;
 import org.kiwi.aws.s3.S3Bucket;
 import org.kiwi.aws.s3.S3Content;
+import org.kiwi.aws.s3.S3KeyProvider;
 import org.kiwi.proto.FloatingAverageProtos.FloatingAverage;
 
 public class FloatingAverageS3Repository implements FloatingAverageRepository {

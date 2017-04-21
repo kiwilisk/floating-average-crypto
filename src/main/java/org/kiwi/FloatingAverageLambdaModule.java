@@ -22,6 +22,7 @@ import java.util.HashMap;
 import java.util.Properties;
 import org.kiwi.aws.s3.BinaryBucket;
 import org.kiwi.aws.s3.S3Bucket;
+import org.kiwi.aws.s3.S3KeyProvider;
 import org.kiwi.config.Configuration;
 import org.kiwi.config.ConfigurationLoader;
 import org.kiwi.crypto.api.CoinMarketCap;
@@ -32,7 +33,6 @@ import org.kiwi.crypto.currency.CurrencyMapper;
 import org.kiwi.proto.FloatingAverageRepository;
 import org.kiwi.proto.FloatingAverageS3Repository;
 import org.kiwi.proto.HexKeyProvider;
-import org.kiwi.proto.S3KeyProvider;
 import org.kiwi.rest.RestClient;
 import org.kiwi.rest.UnirestClient;
 
