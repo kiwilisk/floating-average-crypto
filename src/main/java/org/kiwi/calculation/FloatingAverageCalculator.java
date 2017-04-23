@@ -33,15 +33,18 @@ class FloatingAverageCalculator {
         Quote latestQuote = createQuoteWith(latestValue, latestAverage, dateInEpochSeconds);
         historicalQuotes.add(latestQuote);
         Configuration configuration = configurationLoader.loadFor(currency.id());
+        BigDecimal deviationThreshold = configuration.deviationThreshold();
         AlertState state = new AverageAlertState()
-                .evaluateStateWith(latestAverage, latestValue, configuration.deviationThreshold());
+                .evaluateStateWith(latestAverage, latestValue, deviationThreshold);
 
         return newBuilder()
                 .setId(currency.id())
                 .setSymbol(currency.symbol())
                 .setName(currency.name())
                 .setClosingDate(dateInEpochSeconds)
-                .setCurrentAverage(latestAverage.toPlainString())
+                .setDeviationThreshold(deviationThreshold.toPlainString())
+                .setLatestAverage(latestAverage.toPlainString())
+                .setLatestQuoteValue(latestValue.toPlainString())
                 .setMaxDaysCap(configuration.maxDaysCap())
                 .addAllQuotes(historicalQuotes)
                 .setAlertState(state)

@@ -796,26 +796,49 @@ public final class FloatingAverageProtos {
             int index);
 
     /**
-     * <code>string currentAverage = 6;</code>
+     * <code>string deviationThreshold = 6;</code>
      */
-    java.lang.String getCurrentAverage();
+    java.lang.String getDeviationThreshold();
     /**
-     * <code>string currentAverage = 6;</code>
+     * <code>string deviationThreshold = 6;</code>
      */
     com.google.protobuf.ByteString
-    getCurrentAverageBytes();
+    getDeviationThresholdBytes();
 
     /**
-     * <code>int64 closingDate = 7;</code>
+     * <code>string latestAverage = 7;</code>
+     */
+    java.lang.String getLatestAverage();
+
+    /**
+     * <code>string latestAverage = 7;</code>
+     */
+    com.google.protobuf.ByteString
+    getLatestAverageBytes();
+
+    /**
+     * <code>string latestQuoteValue = 8;</code>
+     */
+    java.lang.String getLatestQuoteValue();
+
+    /**
+     * <code>string latestQuoteValue = 8;</code>
+     */
+    com.google.protobuf.ByteString
+    getLatestQuoteValueBytes();
+
+    /**
+     * <code>int64 closingDate = 9;</code>
      */
     long getClosingDate();
 
     /**
-     * <code>.floatingquotes.FloatingAverage.AlertState alertState = 8;</code>
+     * <code>.floatingquotes.FloatingAverage.AlertState alertState = 10;</code>
      */
     int getAlertStateValue();
+
     /**
-     * <code>.floatingquotes.FloatingAverage.AlertState alertState = 8;</code>
+     * <code>.floatingquotes.FloatingAverage.AlertState alertState = 10;</code>
      */
     org.kiwi.proto.FloatingAverageProtos.FloatingAverage.AlertState getAlertState();
   }
@@ -834,9 +857,11 @@ public final class FloatingAverageProtos {
       id_ = "";
       name_ = "";
       symbol_ = "";
-        maxDaysCap_ = 0;
+      maxDaysCap_ = 0;
       quotes_ = java.util.Collections.emptyList();
-      currentAverage_ = "";
+      deviationThreshold_ = "";
+      latestAverage_ = "";
+      latestQuoteValue_ = "";
       closingDate_ = 0L;
       alertState_ = 0;
     }
@@ -893,23 +918,35 @@ public final class FloatingAverageProtos {
                   if (!((mutable_bitField0_ & 0x00000010) == 0x00000010)) {
                 quotes_ = new java.util.ArrayList<org.kiwi.proto.FloatingAverageProtos.Quote>();
                       mutable_bitField0_ |= 0x00000010;
+                  }
+                quotes_.add(
+                        input.readMessage(org.kiwi.proto.FloatingAverageProtos.Quote.parser(), extensionRegistry));
+                break;
               }
-              quotes_.add(
-                      input.readMessage(org.kiwi.proto.FloatingAverageProtos.Quote.parser(), extensionRegistry));
-              break;
-            }
-              case 50: {
+            case 50: {
               java.lang.String s = input.readStringRequireUtf8();
 
-              currentAverage_ = s;
+              deviationThreshold_ = s;
               break;
             }
-              case 56: {
+            case 58: {
+              java.lang.String s = input.readStringRequireUtf8();
+
+              latestAverage_ = s;
+              break;
+            }
+            case 66: {
+              java.lang.String s = input.readStringRequireUtf8();
+
+              latestQuoteValue_ = s;
+              break;
+            }
+            case 72: {
 
               closingDate_ = input.readInt64();
               break;
             }
-              case 64: {
+            case 80: {
               int rawValue = input.readEnum();
 
               alertState_ = rawValue;
@@ -959,7 +996,8 @@ public final class FloatingAverageProtos {
        * <code>SELL = 2;</code>
        */
       SELL(2),
-        UNRECOGNIZED(-1),;
+      UNRECOGNIZED(-1),
+      ;
 
       /**
        * <code>NONE = 0;</code>
@@ -993,14 +1031,14 @@ public final class FloatingAverageProtos {
 
       public static AlertState forNumber(int value) {
         switch (value) {
-            case 0:
-                return NONE;
-            case 1:
-                return BUY;
-            case 2:
-                return SELL;
-            default:
-                return null;
+          case 0:
+            return NONE;
+          case 1:
+            return BUY;
+          case 2:
+            return SELL;
+          default:
+            return null;
         }
       }
 
@@ -1180,8 +1218,8 @@ public final class FloatingAverageProtos {
        */
       public java.util.List<? extends org.kiwi.proto.FloatingAverageProtos.QuoteOrBuilder>
       getQuotesOrBuilderList() {
-      return quotes_;
-    }
+        return quotes_;
+      }
 
       /**
        * <code>repeated .floatingquotes.Quote quotes = 5;</code>
@@ -1205,68 +1243,139 @@ public final class FloatingAverageProtos {
       return quotes_.get(index);
     }
 
-      public static final int CURRENTAVERAGE_FIELD_NUMBER = 6;
-    private volatile java.lang.Object currentAverage_;
+    public static final int DEVIATIONTHRESHOLD_FIELD_NUMBER = 6;
+    private volatile java.lang.Object deviationThreshold_;
 
-      /**
-       * <code>string currentAverage = 6;</code>
+    /**
+     * <code>string deviationThreshold = 6;</code>
      */
-    public java.lang.String getCurrentAverage() {
-      java.lang.Object ref = currentAverage_;
+    public java.lang.String getDeviationThreshold() {
+      java.lang.Object ref = deviationThreshold_;
       if (ref instanceof java.lang.String) {
         return (java.lang.String) ref;
       } else {
           com.google.protobuf.ByteString bs =
                   (com.google.protobuf.ByteString) ref;
         java.lang.String s = bs.toStringUtf8();
-        currentAverage_ = s;
+        deviationThreshold_ = s;
         return s;
       }
     }
 
-      /**
-       * <code>string currentAverage = 6;</code>
+    /**
+     * <code>string deviationThreshold = 6;</code>
      */
     public com.google.protobuf.ByteString
-    getCurrentAverageBytes() {
-      java.lang.Object ref = currentAverage_;
+    getDeviationThresholdBytes() {
+      java.lang.Object ref = deviationThreshold_;
       if (ref instanceof java.lang.String) {
-          com.google.protobuf.ByteString b =
-                  com.google.protobuf.ByteString.copyFromUtf8(
-                          (java.lang.String) ref);
-        currentAverage_ = b;
+        com.google.protobuf.ByteString b =
+                com.google.protobuf.ByteString.copyFromUtf8(
+                        (java.lang.String) ref);
+        deviationThreshold_ = b;
         return b;
       } else {
         return (com.google.protobuf.ByteString) ref;
       }
     }
 
-      public static final int CLOSINGDATE_FIELD_NUMBER = 7;
+    public static final int LATESTAVERAGE_FIELD_NUMBER = 7;
+    private volatile java.lang.Object latestAverage_;
+
+    /**
+     * <code>string latestAverage = 7;</code>
+     */
+    public java.lang.String getLatestAverage() {
+      java.lang.Object ref = latestAverage_;
+      if (ref instanceof java.lang.String) {
+        return (java.lang.String) ref;
+      } else {
+        com.google.protobuf.ByteString bs =
+                (com.google.protobuf.ByteString) ref;
+        java.lang.String s = bs.toStringUtf8();
+        latestAverage_ = s;
+        return s;
+      }
+    }
+
+    /**
+     * <code>string latestAverage = 7;</code>
+     */
+    public com.google.protobuf.ByteString
+    getLatestAverageBytes() {
+      java.lang.Object ref = latestAverage_;
+      if (ref instanceof java.lang.String) {
+        com.google.protobuf.ByteString b =
+                com.google.protobuf.ByteString.copyFromUtf8(
+                        (java.lang.String) ref);
+        latestAverage_ = b;
+        return b;
+      } else {
+        return (com.google.protobuf.ByteString) ref;
+      }
+    }
+
+    public static final int LATESTQUOTEVALUE_FIELD_NUMBER = 8;
+    private volatile java.lang.Object latestQuoteValue_;
+
+    /**
+     * <code>string latestQuoteValue = 8;</code>
+     */
+    public java.lang.String getLatestQuoteValue() {
+      java.lang.Object ref = latestQuoteValue_;
+      if (ref instanceof java.lang.String) {
+        return (java.lang.String) ref;
+      } else {
+        com.google.protobuf.ByteString bs =
+                (com.google.protobuf.ByteString) ref;
+        java.lang.String s = bs.toStringUtf8();
+        latestQuoteValue_ = s;
+        return s;
+      }
+    }
+
+    /**
+     * <code>string latestQuoteValue = 8;</code>
+     */
+    public com.google.protobuf.ByteString
+    getLatestQuoteValueBytes() {
+      java.lang.Object ref = latestQuoteValue_;
+      if (ref instanceof java.lang.String) {
+        com.google.protobuf.ByteString b =
+                com.google.protobuf.ByteString.copyFromUtf8(
+                        (java.lang.String) ref);
+        latestQuoteValue_ = b;
+        return b;
+      } else {
+        return (com.google.protobuf.ByteString) ref;
+      }
+    }
+
+    public static final int CLOSINGDATE_FIELD_NUMBER = 9;
     private long closingDate_;
 
-      /**
-       * <code>int64 closingDate = 7;</code>
+    /**
+     * <code>int64 closingDate = 9;</code>
      */
     public long getClosingDate() {
       return closingDate_;
     }
 
-      public static final int ALERTSTATE_FIELD_NUMBER = 8;
-    private int alertState_;
+    public static final int ALERTSTATE_FIELD_NUMBER = 10;
+      private int alertState_;
 
-      /**
-       * <code>.floatingquotes.FloatingAverage.AlertState alertState = 8;</code>
+    /**
+     * <code>.floatingquotes.FloatingAverage.AlertState alertState = 10;</code>
      */
     public int getAlertStateValue() {
       return alertState_;
     }
 
-      /**
-       * <code>.floatingquotes.FloatingAverage.AlertState alertState = 8;</code>
+    /**
+     * <code>.floatingquotes.FloatingAverage.AlertState alertState = 10;</code>
      */
     public org.kiwi.proto.FloatingAverageProtos.FloatingAverage.AlertState getAlertState() {
-        org.kiwi.proto.FloatingAverageProtos.FloatingAverage.AlertState result = org.kiwi.proto.FloatingAverageProtos.FloatingAverage.AlertState
-                .valueOf(alertState_);
+      org.kiwi.proto.FloatingAverageProtos.FloatingAverage.AlertState result = org.kiwi.proto.FloatingAverageProtos.FloatingAverage.AlertState.valueOf(alertState_);
       return result == null ? org.kiwi.proto.FloatingAverageProtos.FloatingAverage.AlertState.UNRECOGNIZED : result;
     }
 
@@ -1295,28 +1404,34 @@ public final class FloatingAverageProtos {
       if (!getSymbolBytes().isEmpty()) {
         com.google.protobuf.GeneratedMessageV3.writeString(output, 3, symbol_);
       }
-        if (maxDaysCap_ != 0) {
-            output.writeInt32(4, maxDaysCap_);
-        }
-      for (int i = 0; i < quotes_.size(); i++) {
-          output.writeMessage(5, quotes_.get(i));
+      if (maxDaysCap_ != 0) {
+        output.writeInt32(4, maxDaysCap_);
       }
-      if (!getCurrentAverageBytes().isEmpty()) {
-          com.google.protobuf.GeneratedMessageV3.writeString(output, 6, currentAverage_);
+      for (int i = 0; i < quotes_.size(); i++) {
+        output.writeMessage(5, quotes_.get(i));
+      }
+      if (!getDeviationThresholdBytes().isEmpty()) {
+        com.google.protobuf.GeneratedMessageV3.writeString(output, 6, deviationThreshold_);
+      }
+      if (!getLatestAverageBytes().isEmpty()) {
+        com.google.protobuf.GeneratedMessageV3.writeString(output, 7, latestAverage_);
+      }
+      if (!getLatestQuoteValueBytes().isEmpty()) {
+        com.google.protobuf.GeneratedMessageV3.writeString(output, 8, latestQuoteValue_);
       }
       if (closingDate_ != 0L) {
-          output.writeInt64(7, closingDate_);
+        output.writeInt64(9, closingDate_);
       }
       if (alertState_ != org.kiwi.proto.FloatingAverageProtos.FloatingAverage.AlertState.NONE.getNumber()) {
-          output.writeEnum(8, alertState_);
+        output.writeEnum(10, alertState_);
       }
     }
 
     public int getSerializedSize() {
       int size = memoizedSize;
-        if (size != -1) {
-            return size;
-        }
+      if (size != -1) {
+        return size;
+          }
 
       size = 0;
       if (!getIdBytes().isEmpty()) {
@@ -1328,24 +1443,30 @@ public final class FloatingAverageProtos {
       if (!getSymbolBytes().isEmpty()) {
         size += com.google.protobuf.GeneratedMessageV3.computeStringSize(3, symbol_);
       }
-        if (maxDaysCap_ != 0) {
-            size += com.google.protobuf.CodedOutputStream
-                    .computeInt32Size(4, maxDaysCap_);
-        }
+      if (maxDaysCap_ != 0) {
+        size += com.google.protobuf.CodedOutputStream
+                .computeInt32Size(4, maxDaysCap_);
+      }
       for (int i = 0; i < quotes_.size(); i++) {
         size += com.google.protobuf.CodedOutputStream
                 .computeMessageSize(5, quotes_.get(i));
       }
-      if (!getCurrentAverageBytes().isEmpty()) {
-          size += com.google.protobuf.GeneratedMessageV3.computeStringSize(6, currentAverage_);
+      if (!getDeviationThresholdBytes().isEmpty()) {
+        size += com.google.protobuf.GeneratedMessageV3.computeStringSize(6, deviationThreshold_);
+      }
+      if (!getLatestAverageBytes().isEmpty()) {
+        size += com.google.protobuf.GeneratedMessageV3.computeStringSize(7, latestAverage_);
+      }
+      if (!getLatestQuoteValueBytes().isEmpty()) {
+        size += com.google.protobuf.GeneratedMessageV3.computeStringSize(8, latestQuoteValue_);
       }
       if (closingDate_ != 0L) {
         size += com.google.protobuf.CodedOutputStream
-                .computeInt64Size(7, closingDate_);
+                .computeInt64Size(9, closingDate_);
       }
       if (alertState_ != org.kiwi.proto.FloatingAverageProtos.FloatingAverage.AlertState.NONE.getNumber()) {
         size += com.google.protobuf.CodedOutputStream
-                .computeEnumSize(8, alertState_);
+                .computeEnumSize(10, alertState_);
       }
       memoizedSize = size;
       return size;
@@ -1355,14 +1476,14 @@ public final class FloatingAverageProtos {
     @java.lang.Override
     public boolean equals(final java.lang.Object obj) {
       if (obj == this) {
-          return true;
+       return true;
       }
       if (!(obj instanceof org.kiwi.proto.FloatingAverageProtos.FloatingAverage)) {
         return super.equals(obj);
       }
       org.kiwi.proto.FloatingAverageProtos.FloatingAverage other = (org.kiwi.proto.FloatingAverageProtos.FloatingAverage) obj;
 
-      boolean result = true;
+        boolean result = true;
       result = result && getId()
               .equals(other.getId());
       result = result && getName()
@@ -1373,8 +1494,12 @@ public final class FloatingAverageProtos {
                 == other.getMaxDaysCap());
       result = result && getQuotesList()
               .equals(other.getQuotesList());
-      result = result && getCurrentAverage()
-              .equals(other.getCurrentAverage());
+      result = result && getDeviationThreshold()
+              .equals(other.getDeviationThreshold());
+      result = result && getLatestAverage()
+              .equals(other.getLatestAverage());
+      result = result && getLatestQuoteValue()
+              .equals(other.getLatestQuoteValue());
       result = result && (getClosingDate()
               == other.getClosingDate());
       result = result && alertState_ == other.alertState_;
@@ -1395,16 +1520,20 @@ public final class FloatingAverageProtos {
       hash = (37 * hash) + SYMBOL_FIELD_NUMBER;
       hash = (53 * hash) + getSymbol().hashCode();
         hash = (37 * hash) + MAXDAYSCAP_FIELD_NUMBER;
-        hash = (53 * hash) + getMaxDaysCap();
+      hash = (53 * hash) + getMaxDaysCap();
       if (getQuotesCount() > 0) {
         hash = (37 * hash) + QUOTES_FIELD_NUMBER;
         hash = (53 * hash) + getQuotesList().hashCode();
       }
-      hash = (37 * hash) + CURRENTAVERAGE_FIELD_NUMBER;
-      hash = (53 * hash) + getCurrentAverage().hashCode();
+      hash = (37 * hash) + DEVIATIONTHRESHOLD_FIELD_NUMBER;
+      hash = (53 * hash) + getDeviationThreshold().hashCode();
+      hash = (37 * hash) + LATESTAVERAGE_FIELD_NUMBER;
+      hash = (53 * hash) + getLatestAverage().hashCode();
+      hash = (37 * hash) + LATESTQUOTEVALUE_FIELD_NUMBER;
+      hash = (53 * hash) + getLatestQuoteValue().hashCode();
       hash = (37 * hash) + CLOSINGDATE_FIELD_NUMBER;
       hash = (53 * hash) + com.google.protobuf.Internal.hashLong(
-              getClosingDate());
+          getClosingDate());
       hash = (37 * hash) + ALERTSTATE_FIELD_NUMBER;
       hash = (53 * hash) + alertState_;
       hash = (29 * hash) + unknownFields.hashCode();
@@ -1471,14 +1600,14 @@ public final class FloatingAverageProtos {
               .parseWithIOException(PARSER, input, extensionRegistry);
     }
 
-      public Builder newBuilderForType() {
-          return newBuilder(); }
+    public Builder newBuilderForType() { return newBuilder(); }
     public static Builder newBuilder() {
       return DEFAULT_INSTANCE.toBuilder();
     }
     public static Builder newBuilder(org.kiwi.proto.FloatingAverageProtos.FloatingAverage prototype) {
       return DEFAULT_INSTANCE.toBuilder().mergeFrom(prototype);
     }
+
     public Builder toBuilder() {
       return this == DEFAULT_INSTANCE
               ? new Builder() : new Builder().mergeFrom(this);
@@ -1497,8 +1626,9 @@ public final class FloatingAverageProtos {
             com.google.protobuf.GeneratedMessageV3.Builder<Builder> implements
             // @@protoc_insertion_point(builder_implements:floatingquotes.FloatingAverage)
             org.kiwi.proto.FloatingAverageProtos.FloatingAverageOrBuilder {
+
       public static final com.google.protobuf.Descriptors.Descriptor
-      getDescriptor() {
+          getDescriptor() {
         return org.kiwi.proto.FloatingAverageProtos.internal_static_floatingquotes_FloatingAverage_descriptor;
       }
 
@@ -1506,8 +1636,7 @@ public final class FloatingAverageProtos {
       internalGetFieldAccessorTable() {
         return org.kiwi.proto.FloatingAverageProtos.internal_static_floatingquotes_FloatingAverage_fieldAccessorTable
                 .ensureFieldAccessorsInitialized(
-                        org.kiwi.proto.FloatingAverageProtos.FloatingAverage.class,
-                        org.kiwi.proto.FloatingAverageProtos.FloatingAverage.Builder.class);
+                        org.kiwi.proto.FloatingAverageProtos.FloatingAverage.class, org.kiwi.proto.FloatingAverageProtos.FloatingAverage.Builder.class);
       }
 
       // Construct using org.kiwi.proto.FloatingAverageProtos.FloatingAverage.newBuilder()
@@ -1528,21 +1657,25 @@ public final class FloatingAverageProtos {
       }
       public Builder clear() {
         super.clear();
-        id_ = "";
+          id_ = "";
 
         name_ = "";
 
         symbol_ = "";
 
-          maxDaysCap_ = 0;
+        maxDaysCap_ = 0;
 
         if (quotesBuilder_ == null) {
           quotes_ = java.util.Collections.emptyList();
-            bitField0_ = (bitField0_ & ~0x00000010);
+          bitField0_ = (bitField0_ & ~0x00000010);
         } else {
           quotesBuilder_.clear();
         }
-        currentAverage_ = "";
+        deviationThreshold_ = "";
+
+        latestAverage_ = "";
+
+        latestQuoteValue_ = "";
 
         closingDate_ = 0L;
 
@@ -1577,15 +1710,17 @@ public final class FloatingAverageProtos {
         result.symbol_ = symbol_;
           result.maxDaysCap_ = maxDaysCap_;
         if (quotesBuilder_ == null) {
-            if (((bitField0_ & 0x00000010) == 0x00000010)) {
+          if (((bitField0_ & 0x00000010) == 0x00000010)) {
             quotes_ = java.util.Collections.unmodifiableList(quotes_);
-                bitField0_ = (bitField0_ & ~0x00000010);
+            bitField0_ = (bitField0_ & ~0x00000010);
           }
           result.quotes_ = quotes_;
         } else {
           result.quotes_ = quotesBuilder_.build();
         }
-        result.currentAverage_ = currentAverage_;
+        result.deviationThreshold_ = deviationThreshold_;
+        result.latestAverage_ = latestAverage_;
+        result.latestQuoteValue_ = latestQuoteValue_;
         result.closingDate_ = closingDate_;
         result.alertState_ = alertState_;
         result.bitField0_ = to_bitField0_;
@@ -1596,27 +1731,32 @@ public final class FloatingAverageProtos {
       public Builder clone() {
         return (Builder) super.clone();
       }
+
       public Builder setField(
               com.google.protobuf.Descriptors.FieldDescriptor field,
-              Object value) {
+          Object value) {
         return (Builder) super.setField(field, value);
       }
+
       public Builder clearField(
               com.google.protobuf.Descriptors.FieldDescriptor field) {
         return (Builder) super.clearField(field);
       }
+
       public Builder clearOneof(
               com.google.protobuf.Descriptors.OneofDescriptor oneof) {
         return (Builder) super.clearOneof(oneof);
       }
+
       public Builder setRepeatedField(
               com.google.protobuf.Descriptors.FieldDescriptor field,
               int index, Object value) {
         return (Builder) super.setRepeatedField(field, index, value);
       }
+
       public Builder addRepeatedField(
               com.google.protobuf.Descriptors.FieldDescriptor field,
-              Object value) {
+          Object value) {
         return (Builder) super.addRepeatedField(field, value);
       }
       public Builder mergeFrom(com.google.protobuf.Message other) {
@@ -1642,16 +1782,16 @@ public final class FloatingAverageProtos {
         }
         if (!other.getSymbol().isEmpty()) {
           symbol_ = other.symbol_;
-          onChanged();
+            onChanged();
         }
           if (other.getMaxDaysCap() != 0) {
-              setMaxDaysCap(other.getMaxDaysCap());
-          }
+            setMaxDaysCap(other.getMaxDaysCap());
+        }
         if (quotesBuilder_ == null) {
           if (!other.quotes_.isEmpty()) {
             if (quotes_.isEmpty()) {
               quotes_ = other.quotes_;
-                bitField0_ = (bitField0_ & ~0x00000010);
+              bitField0_ = (bitField0_ & ~0x00000010);
             } else {
               ensureQuotesIsMutable();
               quotes_.addAll(other.quotes_);
@@ -1673,8 +1813,16 @@ public final class FloatingAverageProtos {
             }
           }
         }
-        if (!other.getCurrentAverage().isEmpty()) {
-          currentAverage_ = other.currentAverage_;
+        if (!other.getDeviationThreshold().isEmpty()) {
+          deviationThreshold_ = other.deviationThreshold_;
+          onChanged();
+        }
+        if (!other.getLatestAverage().isEmpty()) {
+          latestAverage_ = other.latestAverage_;
+          onChanged();
+        }
+        if (!other.getLatestQuoteValue().isEmpty()) {
+          latestQuoteValue_ = other.latestQuoteValue_;
           onChanged();
         }
         if (other.getClosingDate() != 0L) {
@@ -1733,9 +1881,9 @@ public final class FloatingAverageProtos {
       getIdBytes() {
         java.lang.Object ref = id_;
         if (ref instanceof String) {
-            com.google.protobuf.ByteString b =
-                    com.google.protobuf.ByteString.copyFromUtf8(
-                            (java.lang.String) ref);
+          com.google.protobuf.ByteString b =
+                  com.google.protobuf.ByteString.copyFromUtf8(
+                          (java.lang.String) ref);
           id_ = b;
           return b;
         } else {
@@ -1748,7 +1896,7 @@ public final class FloatingAverageProtos {
       public Builder setId(
               java.lang.String value) {
         if (value == null) {
-            throw new NullPointerException();
+          throw new NullPointerException();
   }
   
         id_ = value;
@@ -1760,7 +1908,7 @@ public final class FloatingAverageProtos {
        */
       public Builder clearId() {
 
-          id_ = getDefaultInstance().getId();
+        id_ = getDefaultInstance().getId();
         onChanged();
         return this;
       }
@@ -1770,9 +1918,9 @@ public final class FloatingAverageProtos {
       public Builder setIdBytes(
               com.google.protobuf.ByteString value) {
         if (value == null) {
-            throw new NullPointerException();
+          throw new NullPointerException();
         }
-          checkByteStringIsUtf8(value);
+  checkByteStringIsUtf8(value);
         
         id_ = value;
         onChanged();
@@ -1802,9 +1950,9 @@ public final class FloatingAverageProtos {
       getNameBytes() {
         java.lang.Object ref = name_;
         if (ref instanceof String) {
-            com.google.protobuf.ByteString b =
-                    com.google.protobuf.ByteString.copyFromUtf8(
-                            (java.lang.String) ref);
+          com.google.protobuf.ByteString b =
+                  com.google.protobuf.ByteString.copyFromUtf8(
+                          (java.lang.String) ref);
           name_ = b;
           return b;
         } else {
@@ -1817,7 +1965,7 @@ public final class FloatingAverageProtos {
       public Builder setName(
               java.lang.String value) {
         if (value == null) {
-            throw new NullPointerException();
+          throw new NullPointerException();
   }
   
         name_ = value;
@@ -1829,7 +1977,7 @@ public final class FloatingAverageProtos {
        */
       public Builder clearName() {
 
-          name_ = getDefaultInstance().getName();
+        name_ = getDefaultInstance().getName();
         onChanged();
         return this;
       }
@@ -1839,9 +1987,9 @@ public final class FloatingAverageProtos {
       public Builder setNameBytes(
               com.google.protobuf.ByteString value) {
         if (value == null) {
-            throw new NullPointerException();
+          throw new NullPointerException();
         }
-          checkByteStringIsUtf8(value);
+  checkByteStringIsUtf8(value);
         
         name_ = value;
         onChanged();
@@ -1871,9 +2019,9 @@ public final class FloatingAverageProtos {
       getSymbolBytes() {
         java.lang.Object ref = symbol_;
         if (ref instanceof String) {
-            com.google.protobuf.ByteString b =
-                    com.google.protobuf.ByteString.copyFromUtf8(
-                            (java.lang.String) ref);
+          com.google.protobuf.ByteString b =
+                  com.google.protobuf.ByteString.copyFromUtf8(
+                          (java.lang.String) ref);
           symbol_ = b;
           return b;
         } else {
@@ -1886,7 +2034,7 @@ public final class FloatingAverageProtos {
       public Builder setSymbol(
               java.lang.String value) {
         if (value == null) {
-            throw new NullPointerException();
+          throw new NullPointerException();
   }
   
         symbol_ = value;
@@ -1898,7 +2046,7 @@ public final class FloatingAverageProtos {
        */
       public Builder clearSymbol() {
 
-          symbol_ = getDefaultInstance().getSymbol();
+        symbol_ = getDefaultInstance().getSymbol();
         onChanged();
         return this;
       }
@@ -1908,13 +2056,13 @@ public final class FloatingAverageProtos {
       public Builder setSymbolBytes(
               com.google.protobuf.ByteString value) {
         if (value == null) {
-            throw new NullPointerException();
+          throw new NullPointerException();
         }
-          checkByteStringIsUtf8(value);
-        
+        checkByteStringIsUtf8(value);
+
         symbol_ = value;
         onChanged();
-        return this;
+          return this;
       }
 
         private int maxDaysCap_;
@@ -1941,26 +2089,26 @@ public final class FloatingAverageProtos {
          */
         public Builder clearMaxDaysCap() {
 
-            maxDaysCap_ = 0;
-            onChanged();
-            return this;
-        }
+          maxDaysCap_ = 0;
+          onChanged();
+        return this;
+      }
 
       private java.util.List<org.kiwi.proto.FloatingAverageProtos.Quote> quotes_ =
-        java.util.Collections.emptyList();
+              java.util.Collections.emptyList();
 
-        private void ensureQuotesIsMutable() {
-            if (!((bitField0_ & 0x00000010) == 0x00000010)) {
+      private void ensureQuotesIsMutable() {
+        if (!((bitField0_ & 0x00000010) == 0x00000010)) {
           quotes_ = new java.util.ArrayList<org.kiwi.proto.FloatingAverageProtos.Quote>(quotes_);
-                bitField0_ |= 0x00000010;
-         }
+          bitField0_ |= 0x00000010;
+        }
       }
 
       private com.google.protobuf.RepeatedFieldBuilderV3<
               org.kiwi.proto.FloatingAverageProtos.Quote, org.kiwi.proto.FloatingAverageProtos.Quote.Builder, org.kiwi.proto.FloatingAverageProtos.QuoteOrBuilder> quotesBuilder_;
 
-        /**
-         * <code>repeated .floatingquotes.Quote quotes = 5;</code>
+      /**
+       * <code>repeated .floatingquotes.Quote quotes = 5;</code>
        */
       public java.util.List<org.kiwi.proto.FloatingAverageProtos.Quote> getQuotesList() {
         if (quotesBuilder_ == null) {
@@ -1970,8 +2118,8 @@ public final class FloatingAverageProtos {
         }
       }
 
-        /**
-         * <code>repeated .floatingquotes.Quote quotes = 5;</code>
+      /**
+       * <code>repeated .floatingquotes.Quote quotes = 5;</code>
        */
       public int getQuotesCount() {
         if (quotesBuilder_ == null) {
@@ -1981,8 +2129,8 @@ public final class FloatingAverageProtos {
         }
       }
 
-        /**
-         * <code>repeated .floatingquotes.Quote quotes = 5;</code>
+      /**
+       * <code>repeated .floatingquotes.Quote quotes = 5;</code>
        */
       public org.kiwi.proto.FloatingAverageProtos.Quote getQuotes(int index) {
         if (quotesBuilder_ == null) {
@@ -2007,8 +2155,8 @@ public final class FloatingAverageProtos {
         } else {
           quotesBuilder_.setMessage(index, value);
         }
-            return this;
-        }
+          return this;
+      }
 
         /**
          * <code>repeated .floatingquotes.Quote quotes = 5;</code>
@@ -2022,11 +2170,11 @@ public final class FloatingAverageProtos {
         } else {
           quotesBuilder_.setMessage(index, builderForValue.build());
         }
-            return this;
+          return this;
         }
 
-        /**
-         * <code>repeated .floatingquotes.Quote quotes = 5;</code>
+      /**
+       * <code>repeated .floatingquotes.Quote quotes = 5;</code>
        */
       public Builder addQuotes(org.kiwi.proto.FloatingAverageProtos.Quote value) {
         if (quotesBuilder_ == null) {
@@ -2057,8 +2205,8 @@ public final class FloatingAverageProtos {
         } else {
           quotesBuilder_.addMessage(index, value);
         }
-            return this;
-        }
+          return this;
+      }
 
         /**
          * <code>repeated .floatingquotes.Quote quotes = 5;</code>
@@ -2072,8 +2220,8 @@ public final class FloatingAverageProtos {
         } else {
           quotesBuilder_.addMessage(builderForValue.build());
         }
-            return this;
-        }
+          return this;
+      }
 
         /**
          * <code>repeated .floatingquotes.Quote quotes = 5;</code>
@@ -2098,30 +2246,30 @@ public final class FloatingAverageProtos {
         if (quotesBuilder_ == null) {
           ensureQuotesIsMutable();
           com.google.protobuf.AbstractMessageLite.Builder.addAll(
-              values, quotes_);
+                  values, quotes_);
           onChanged();
         } else {
           quotesBuilder_.addAllMessages(values);
         }
-            return this;
+          return this;
         }
 
-        /**
-         * <code>repeated .floatingquotes.Quote quotes = 5;</code>
+      /**
+       * <code>repeated .floatingquotes.Quote quotes = 5;</code>
        */
       public Builder clearQuotes() {
         if (quotesBuilder_ == null) {
           quotes_ = java.util.Collections.emptyList();
-            bitField0_ = (bitField0_ & ~0x00000010);
+          bitField0_ = (bitField0_ & ~0x00000010);
           onChanged();
         } else {
           quotesBuilder_.clear();
         }
-          return this;
+        return this;
       }
 
-        /**
-         * <code>repeated .floatingquotes.Quote quotes = 5;</code>
+      /**
+       * <code>repeated .floatingquotes.Quote quotes = 5;</code>
        */
       public Builder removeQuotes(int index) {
         if (quotesBuilder_ == null) {
@@ -2131,26 +2279,27 @@ public final class FloatingAverageProtos {
         } else {
           quotesBuilder_.remove(index);
         }
-          return this;
+        return this;
       }
 
-        /**
-         * <code>repeated .floatingquotes.Quote quotes = 5;</code>
+      /**
+       * <code>repeated .floatingquotes.Quote quotes = 5;</code>
        */
       public org.kiwi.proto.FloatingAverageProtos.Quote.Builder getQuotesBuilder(
-          int index) {
+              int index) {
         return getQuotesFieldBuilder().getBuilder(index);
       }
 
-        /**
-         * <code>repeated .floatingquotes.Quote quotes = 5;</code>
+      /**
+       * <code>repeated .floatingquotes.Quote quotes = 5;</code>
        */
       public org.kiwi.proto.FloatingAverageProtos.QuoteOrBuilder getQuotesOrBuilder(
-          int index) {
-          if (quotesBuilder_ == null) {
-              return quotes_.get(index);  } else {
+              int index) {
+        if (quotesBuilder_ == null) {
+          return quotes_.get(index);
+        } else {
           return quotesBuilder_.getMessageOrBuilder(index);
-          }
+        }
       }
 
         /**
@@ -2165,19 +2314,19 @@ public final class FloatingAverageProtos {
         }
         }
 
-        /**
-         * <code>repeated .floatingquotes.Quote quotes = 5;</code>
+      /**
+       * <code>repeated .floatingquotes.Quote quotes = 5;</code>
        */
       public org.kiwi.proto.FloatingAverageProtos.Quote.Builder addQuotesBuilder() {
           return getQuotesFieldBuilder().addBuilder(
                   org.kiwi.proto.FloatingAverageProtos.Quote.getDefaultInstance());
       }
 
-        /**
-         * <code>repeated .floatingquotes.Quote quotes = 5;</code>
+      /**
+       * <code>repeated .floatingquotes.Quote quotes = 5;</code>
        */
       public org.kiwi.proto.FloatingAverageProtos.Quote.Builder addQuotesBuilder(
-          int index) {
+              int index) {
           return getQuotesFieldBuilder().addBuilder(
                   index, org.kiwi.proto.FloatingAverageProtos.Quote.getDefaultInstance());
       }
@@ -2186,12 +2335,13 @@ public final class FloatingAverageProtos {
          * <code>repeated .floatingquotes.Quote quotes = 5;</code>
          */
         public java.util.List<org.kiwi.proto.FloatingAverageProtos.Quote.Builder>
-           getQuotesBuilderList() {
-        return getQuotesFieldBuilder().getBuilderList();
-      }
+        getQuotesBuilderList() {
+          return getQuotesFieldBuilder().getBuilderList();
+        }
+
       private com.google.protobuf.RepeatedFieldBuilderV3<
               org.kiwi.proto.FloatingAverageProtos.Quote, org.kiwi.proto.FloatingAverageProtos.Quote.Builder, org.kiwi.proto.FloatingAverageProtos.QuoteOrBuilder>
-          getQuotesFieldBuilder() {
+      getQuotesFieldBuilder() {
         if (quotesBuilder_ == null) {
           quotesBuilder_ = new com.google.protobuf.RepeatedFieldBuilderV3<
                   org.kiwi.proto.FloatingAverageProtos.Quote, org.kiwi.proto.FloatingAverageProtos.Quote.Builder, org.kiwi.proto.FloatingAverageProtos.QuoteOrBuilder>(
@@ -2204,120 +2354,266 @@ public final class FloatingAverageProtos {
         return quotesBuilder_;
       }
 
-      private java.lang.Object currentAverage_ = "";
+      private java.lang.Object deviationThreshold_ = "";
 
-        /**
-         * <code>string currentAverage = 6;</code>
+      /**
+       * <code>string deviationThreshold = 6;</code>
        */
-      public java.lang.String getCurrentAverage() {
-        java.lang.Object ref = currentAverage_;
+      public java.lang.String getDeviationThreshold() {
+        java.lang.Object ref = deviationThreshold_;
         if (!(ref instanceof java.lang.String)) {
-            com.google.protobuf.ByteString bs =
-                    (com.google.protobuf.ByteString) ref;
+          com.google.protobuf.ByteString bs =
+                  (com.google.protobuf.ByteString) ref;
           java.lang.String s = bs.toStringUtf8();
-          currentAverage_ = s;
+          deviationThreshold_ = s;
           return s;
         } else {
           return (java.lang.String) ref;
         }
       }
 
-        /**
-         * <code>string currentAverage = 6;</code>
-       */
+      /**
+       * <code>string deviationThreshold = 6;</code>
+         */
         public com.google.protobuf.ByteString
-          getCurrentAverageBytes() {
-        java.lang.Object ref = currentAverage_;
+        getDeviationThresholdBytes() {
+          java.lang.Object ref = deviationThreshold_;
             if (ref instanceof String) {
                 com.google.protobuf.ByteString b =
                         com.google.protobuf.ByteString.copyFromUtf8(
-                  (java.lang.String) ref);
-          currentAverage_ = b;
-          return b;
-        } else {
-          return (com.google.protobuf.ByteString) ref;
+                                (java.lang.String) ref);
+              deviationThreshold_ = b;
+              return b;
+            } else {
+              return (com.google.protobuf.ByteString) ref;
             }
         }
 
-        /**
-         * <code>string currentAverage = 6;</code>
-         */
-        public Builder setCurrentAverage(
-          java.lang.String value) {
-            if (value == null) {
-    throw new NullPointerException();
-  }
-  
-        currentAverage_ = value;
-        onChanged();
-            return this;
+      /**
+       * <code>string deviationThreshold = 6;</code>
+       */
+      public Builder setDeviationThreshold(
+              java.lang.String value) {
+        if (value == null) {
+          throw new NullPointerException();
         }
 
-        /**
-         * <code>string currentAverage = 6;</code>
-       */
-        public Builder clearCurrentAverage() {
-        
-        currentAverage_ = getDefaultInstance().getCurrentAverage();
+        deviationThreshold_ = value;
         onChanged();
-            return this;
-        }
+        return this;
+      }
 
-        /**
-         * <code>string currentAverage = 6;</code>
+      /**
+       * <code>string deviationThreshold = 6;</code>
        */
-        public Builder setCurrentAverageBytes(
+      public Builder clearDeviationThreshold() {
+
+        deviationThreshold_ = getDefaultInstance().getDeviationThreshold();
+        onChanged();
+        return this;
+      }
+
+      /**
+       * <code>string deviationThreshold = 6;</code>
+       */
+      public Builder setDeviationThresholdBytes(
                 com.google.protobuf.ByteString value) {
             if (value == null) {
-                throw new NullPointerException();
-  }
-  checkByteStringIsUtf8(value);
-        
-        currentAverage_ = value;
-            onChanged();
-            return this;
+              throw new NullPointerException();
+            }
+        checkByteStringIsUtf8(value);
+
+        deviationThreshold_ = value;
+        onChanged();
+        return this;
       }
 
-        private long closingDate_;
+      private java.lang.Object latestAverage_ = "";
 
-        /**
-         * <code>int64 closingDate = 7;</code>
+      /**
+       * <code>string latestAverage = 7;</code>
        */
-      public long getClosingDate() {
-          return closingDate_;
+      public java.lang.String getLatestAverage() {
+        java.lang.Object ref = latestAverage_;
+        if (!(ref instanceof java.lang.String)) {
+          com.google.protobuf.ByteString bs =
+                  (com.google.protobuf.ByteString) ref;
+          java.lang.String s = bs.toStringUtf8();
+          latestAverage_ = s;
+          return s;
+        } else {
+          return (java.lang.String) ref;
+        }
       }
 
-        /**
-         * <code>int64 closingDate = 7;</code>
+      /**
+       * <code>string latestAverage = 7;</code>
        */
-        public Builder setClosingDate(long value) {
-        
-        closingDate_ = value;
+      public com.google.protobuf.ByteString
+      getLatestAverageBytes() {
+        java.lang.Object ref = latestAverage_;
+        if (ref instanceof String) {
+          com.google.protobuf.ByteString b =
+                  com.google.protobuf.ByteString.copyFromUtf8(
+                          (java.lang.String) ref);
+          latestAverage_ = b;
+          return b;
+        } else {
+          return (com.google.protobuf.ByteString) ref;
+        }
+      }
+
+      /**
+       * <code>string latestAverage = 7;</code>
+       */
+      public Builder setLatestAverage(
+              java.lang.String value) {
+        if (value == null) {
+          throw new NullPointerException();
+        }
+
+        latestAverage_ = value;
+        onChanged();
+        return this;
+      }
+
+      /**
+       * <code>string latestAverage = 7;</code>
+       */
+      public Builder clearLatestAverage() {
+
+        latestAverage_ = getDefaultInstance().getLatestAverage();
+        onChanged();
+        return this;
+      }
+
+      /**
+       * <code>string latestAverage = 7;</code>
+       */
+      public Builder setLatestAverageBytes(
+              com.google.protobuf.ByteString value) {
+        if (value == null) {
+          throw new NullPointerException();
+        }
+        checkByteStringIsUtf8(value);
+
+        latestAverage_ = value;
+        onChanged();
+        return this;
+      }
+
+      private java.lang.Object latestQuoteValue_ = "";
+
+      /**
+       * <code>string latestQuoteValue = 8;</code>
+       */
+      public java.lang.String getLatestQuoteValue() {
+        java.lang.Object ref = latestQuoteValue_;
+        if (!(ref instanceof java.lang.String)) {
+          com.google.protobuf.ByteString bs =
+                  (com.google.protobuf.ByteString) ref;
+          java.lang.String s = bs.toStringUtf8();
+          latestQuoteValue_ = s;
+          return s;
+        } else {
+          return (java.lang.String) ref;
+        }
+      }
+
+      /**
+       * <code>string latestQuoteValue = 8;</code>
+       */
+      public com.google.protobuf.ByteString
+      getLatestQuoteValueBytes() {
+        java.lang.Object ref = latestQuoteValue_;
+        if (ref instanceof String) {
+          com.google.protobuf.ByteString b =
+                  com.google.protobuf.ByteString.copyFromUtf8(
+                          (java.lang.String) ref);
+          latestQuoteValue_ = b;
+          return b;
+        } else {
+          return (com.google.protobuf.ByteString) ref;
+        }
+      }
+
+      /**
+       * <code>string latestQuoteValue = 8;</code>
+       */
+      public Builder setLatestQuoteValue(
+              java.lang.String value) {
+        if (value == null) {
+          throw new NullPointerException();
+        }
+
+        latestQuoteValue_ = value;
+        onChanged();
+        return this;
+      }
+
+      /**
+       * <code>string latestQuoteValue = 8;</code>
+       */
+      public Builder clearLatestQuoteValue() {
+
+        latestQuoteValue_ = getDefaultInstance().getLatestQuoteValue();
+        onChanged();
+        return this;
+      }
+
+      /**
+       * <code>string latestQuoteValue = 8;</code>
+       */
+      public Builder setLatestQuoteValueBytes(
+              com.google.protobuf.ByteString value) {
+        if (value == null) {
+          throw new NullPointerException();
+        }
+        checkByteStringIsUtf8(value);
+
+        latestQuoteValue_ = value;
         onChanged();
             return this;
         }
 
-        /**
-         * <code>int64 closingDate = 7;</code>
+        private long closingDate_ ;
+      /**
+       * <code>int64 closingDate = 9;</code>
        */
-        public Builder clearClosingDate() {
-        
+      public long getClosingDate() {
+        return closingDate_;
+      }
+
+      /**
+       * <code>int64 closingDate = 9;</code>
+       */
+      public Builder setClosingDate(long value) {
+
+        closingDate_ = value;
+        onChanged();
+        return this;
+      }
+
+      /**
+       * <code>int64 closingDate = 9;</code>
+       */
+      public Builder clearClosingDate() {
+
         closingDate_ = 0L;
         onChanged();
         return this;
       }
 
         private int alertState_ = 0;
-
-        /**
-         * <code>.floatingquotes.FloatingAverage.AlertState alertState = 8;</code>
+      /**
+       * <code>.floatingquotes.FloatingAverage.AlertState alertState = 10;</code>
        */
       public int getAlertStateValue() {
           return alertState_;
       }
 
         /**
-         * <code>.floatingquotes.FloatingAverage.AlertState alertState = 8;</code>
+         * <code>.floatingquotes.FloatingAverage.AlertState alertState = 10;</code>
        */
       public Builder setAlertStateValue(int value) {
         alertState_ = value;
@@ -2326,43 +2622,43 @@ public final class FloatingAverageProtos {
       }
 
         /**
-         * <code>.floatingquotes.FloatingAverage.AlertState alertState = 8;</code>
-       */
-      public org.kiwi.proto.FloatingAverageProtos.FloatingAverage.AlertState getAlertState() {
+         * <code>.floatingquotes.FloatingAverage.AlertState alertState = 10;</code>
+         */
+        public org.kiwi.proto.FloatingAverageProtos.FloatingAverage.AlertState getAlertState() {
           org.kiwi.proto.FloatingAverageProtos.FloatingAverage.AlertState result = org.kiwi.proto.FloatingAverageProtos.FloatingAverage.AlertState.valueOf(alertState_);
-        return result == null ? org.kiwi.proto.FloatingAverageProtos.FloatingAverage.AlertState.UNRECOGNIZED : result;
-      }
+          return result == null ? org.kiwi.proto.FloatingAverageProtos.FloatingAverage.AlertState.UNRECOGNIZED : result;
+        }
 
-        /**
-         * <code>.floatingquotes.FloatingAverage.AlertState alertState = 8;</code>
+      /**
+       * <code>.floatingquotes.FloatingAverage.AlertState alertState = 10;</code>
        */
       public Builder setAlertState(org.kiwi.proto.FloatingAverageProtos.FloatingAverage.AlertState value) {
         if (value == null) {
-            throw new NullPointerException();
+          throw new NullPointerException();
         }
-        
+
         alertState_ = value.getNumber();
         onChanged();
-          return this;
-      }
+            return this;
+        }
 
-        /**
-         * <code>.floatingquotes.FloatingAverage.AlertState alertState = 8;</code>
-         */
-        public Builder clearAlertState() {
-        
+      /**
+       * <code>.floatingquotes.FloatingAverage.AlertState alertState = 10;</code>
+       */
+      public Builder clearAlertState() {
+
         alertState_ = 0;
         onChanged();
+            return this;
+      }
+
+      public final Builder setUnknownFields(
+              final com.google.protobuf.UnknownFieldSet unknownFields) {
         return this;
       }
 
-        public final Builder setUnknownFields(
-                final com.google.protobuf.UnknownFieldSet unknownFields) {
-        return this;
-      }
-
-        public final Builder mergeUnknownFields(
-                final com.google.protobuf.UnknownFieldSet unknownFields) {
+      public final Builder mergeUnknownFields(
+          final com.google.protobuf.UnknownFieldSet unknownFields) {
         return this;
       }
 
@@ -2372,6 +2668,7 @@ public final class FloatingAverageProtos {
 
     // @@protoc_insertion_point(class_scope:floatingquotes.FloatingAverage)
     private static final org.kiwi.proto.FloatingAverageProtos.FloatingAverage DEFAULT_INSTANCE;
+
     static {
       DEFAULT_INSTANCE = new org.kiwi.proto.FloatingAverageProtos.FloatingAverage();
     }
@@ -2384,8 +2681,8 @@ public final class FloatingAverageProtos {
             PARSER = new com.google.protobuf.AbstractParser<FloatingAverage>() {
       public FloatingAverage parsePartialFrom(
               com.google.protobuf.CodedInputStream input,
-              com.google.protobuf.ExtensionRegistryLite extensionRegistry)
-              throws com.google.protobuf.InvalidProtocolBufferException {
+          com.google.protobuf.ExtensionRegistryLite extensionRegistry)
+          throws com.google.protobuf.InvalidProtocolBufferException {
           return new FloatingAverage(input, extensionRegistry);
       }
     };
@@ -2399,49 +2696,51 @@ public final class FloatingAverageProtos {
       return PARSER;
     }
 
-    public org.kiwi.proto.FloatingAverageProtos.FloatingAverage getDefaultInstanceForType() {
-      return DEFAULT_INSTANCE;
-    }
+      public org.kiwi.proto.FloatingAverageProtos.FloatingAverage getDefaultInstanceForType() {
+          return DEFAULT_INSTANCE;
+      }
 
   }
 
   private static final com.google.protobuf.Descriptors.Descriptor
           internal_static_floatingquotes_Quote_descriptor;
-    private static final
-    com.google.protobuf.GeneratedMessageV3.FieldAccessorTable
-            internal_static_floatingquotes_Quote_fieldAccessorTable;
-  private static final com.google.protobuf.Descriptors.Descriptor
-          internal_static_floatingquotes_FloatingAverage_descriptor;
+  private static final
+  com.google.protobuf.GeneratedMessageV3.FieldAccessorTable
+          internal_static_floatingquotes_Quote_fieldAccessorTable;
+    private static final com.google.protobuf.Descriptors.Descriptor
+    internal_static_floatingquotes_FloatingAverage_descriptor;
     private static final
     com.google.protobuf.GeneratedMessageV3.FieldAccessorTable
             internal_static_floatingquotes_FloatingAverage_fieldAccessorTable;
 
-  public static com.google.protobuf.Descriptors.FileDescriptor
-      getDescriptor() {
+    public static com.google.protobuf.Descriptors.FileDescriptor
+    getDescriptor() {
       return descriptor;
-  }
+    }
 
-    private static com.google.protobuf.Descriptors.FileDescriptor
-      descriptor;
+  private static com.google.protobuf.Descriptors.FileDescriptor
+          descriptor;
+
   static {
-      java.lang.String[] descriptorData = {
-              "\n\013depot.proto\022\016floatingquotes\":\n\005Quote\022\r" +
-                      "\n\005value\030\001 \001(\t\022\017\n\007average\030\002 \001(\t\022\021\n\tupdate" +
-                      "dAt\030\003 \001(\003\"\216\002\n\017FloatingAverage\022\n\n\002id\030\001 \001(" +
-                      "\t\022\014\n\004name\030\002 \001(\t\022\016\n\006symbol\030\003 \001(\t\022\022\n\nmaxDa" +
-                      "ysCap\030\004 \001(\005\022%\n\006quotes\030\005 \003(\0132\025.floatingqu" +
-                      "otes.Quote\022\026\n\016currentAverage\030\006 \001(\t\022\023\n\013cl" +
-                      "osingDate\030\007 \001(\003\022>\n\nalertState\030\010 \001(\0162*.fl" +
-                      "oatingquotes.FloatingAverage.AlertState\"" +
-                      ")\n\nAlertState\022\010\n\004NONE\020\000\022\007\n\003BUY\020\001\022\010\n\004SELL" +
-                      "\020\002B\'\n\016org.kiwi.protoB\025FloatingAveragePro",
-      "tosb\006proto3"
+    java.lang.String[] descriptorData = {
+            "\n\013depot.proto\022\016floatingquotes\":\n\005Quote\022\r" +
+                    "\n\005value\030\001 \001(\t\022\017\n\007average\030\002 \001(\t\022\021\n\tupdate" +
+                    "dAt\030\003 \001(\003\"\303\002\n\017FloatingAverage\022\n\n\002id\030\001 \001(" +
+                    "\t\022\014\n\004name\030\002 \001(\t\022\016\n\006symbol\030\003 \001(\t\022\022\n\nmaxDa" +
+                    "ysCap\030\004 \001(\005\022%\n\006quotes\030\005 \003(\0132\025.floatingqu" +
+                    "otes.Quote\022\032\n\022deviationThreshold\030\006 \001(\t\022\025" +
+                    "\n\rlatestAverage\030\007 \001(\t\022\030\n\020latestQuoteValu" +
+                    "e\030\010 \001(\t\022\023\n\013closingDate\030\t \001(\003\022>\n\nalertSta" +
+                    "te\030\n \001(\0162*.floatingquotes.FloatingAverag" +
+                    "e.AlertState\")\n\nAlertState\022\010\n\004NONE\020\000\022\007\n\003",
+            "BUY\020\001\022\010\n\004SELL\020\002B\'\n\016org.kiwi.protoB\025Float" +
+                    "ingAverageProtosb\006proto3"
     };
     com.google.protobuf.Descriptors.FileDescriptor.InternalDescriptorAssigner assigner =
             new com.google.protobuf.Descriptors.FileDescriptor.InternalDescriptorAssigner() {
-                public com.google.protobuf.ExtensionRegistry assignDescriptors(
-                        com.google.protobuf.Descriptors.FileDescriptor root) {
-                    descriptor = root;
+              public com.google.protobuf.ExtensionRegistry assignDescriptors(
+              com.google.protobuf.Descriptors.FileDescriptor root) {
+            descriptor = root;
             return null;
           }
         };
@@ -2454,14 +2753,13 @@ public final class FloatingAverageProtos {
     internal_static_floatingquotes_Quote_fieldAccessorTable = new
       com.google.protobuf.GeneratedMessageV3.FieldAccessorTable(
         internal_static_floatingquotes_Quote_descriptor,
-        new java.lang.String[] { "Value", "Average", "UpdatedAt", });
+            new java.lang.String[]{"Value", "Average", "UpdatedAt",});
     internal_static_floatingquotes_FloatingAverage_descriptor =
-      getDescriptor().getMessageTypes().get(1);
+            getDescriptor().getMessageTypes().get(1);
     internal_static_floatingquotes_FloatingAverage_fieldAccessorTable = new
-      com.google.protobuf.GeneratedMessageV3.FieldAccessorTable(
-        internal_static_floatingquotes_FloatingAverage_descriptor,
-            new java.lang.String[]{"Id", "Name", "Symbol", "MaxDaysCap", "Quotes", "CurrentAverage", "ClosingDate",
-                    "AlertState",});
+            com.google.protobuf.GeneratedMessageV3.FieldAccessorTable(
+            internal_static_floatingquotes_FloatingAverage_descriptor,
+            new java.lang.String[] { "Id", "Name", "Symbol", "MaxDaysCap", "Quotes", "DeviationThreshold", "LatestAverage", "LatestQuoteValue", "ClosingDate", "AlertState", });
   }
 
   // @@protoc_insertion_point(outer_class_scope)

@@ -30,7 +30,9 @@ public class FloatingAverageTestData {
                 .setAlertState(NONE)
                 .setClosingDate(LocalDate.of(2017, 1, 23).atStartOfDay().toInstant(UTC)
                         .getEpochSecond())
-                .setCurrentAverage("1229.68")
+                .setDeviationThreshold("4.0")
+                .setLatestAverage("1229.68")
+                .setLatestQuoteValue("1210.02")
                 .addAllQuotes(asList(quote1, quote2))
                 .build();
     }
@@ -49,7 +51,9 @@ public class FloatingAverageTestData {
                 .setAlertState(NONE)
                 .setClosingDate(LocalDate.of(2017, 1, 23).atStartOfDay().toInstant(UTC)
                         .getEpochSecond())
-                .setCurrentAverage("18.2812")
+                .setDeviationThreshold("4.0")
+                .setLatestAverage("18.2812")
+                .setLatestQuoteValue("18.2812")
                 .addQuotes(etherumQuote)
                 .build();
     }

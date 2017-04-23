@@ -55,7 +55,9 @@ public class FloatingAverageCalculatorTest {
                 .setAlertState(NONE)
                 .setClosingDate(1485129600)
                 .setMaxDaysCap(200)
-                .setCurrentAverage("18.2812")
+                .setDeviationThreshold("4.0")
+                .setLatestAverage("18.2812")
+                .setLatestQuoteValue("18.2812")
                 .addQuotes(etherumQuote)
                 .build();
         assertThat(latestAverage).isEqualTo(expectedAverage);
@@ -74,7 +76,9 @@ public class FloatingAverageCalculatorTest {
                 .setAverage("1213.82")
                 .setUpdatedAt(1485129600).build();
         FloatingAverage expectedAverage = FloatingAverage.newBuilder(bitcoinAverage)
-                .setCurrentAverage("1213.82")
+                .setDeviationThreshold("4.0")
+                .setLatestAverage("1213.82")
+                .setLatestQuoteValue("1229.68")
                 .setClosingDate(1485129600)
                 .addQuotes(expectedNewQuote)
                 .setMaxDaysCap(200)

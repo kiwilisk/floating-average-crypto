@@ -46,7 +46,7 @@ public class FloatingAverageJobTest {
                 .setAverage("1213.82")
                 .setUpdatedAt(1485129600).build();
         FloatingAverage newBitcoinAverage = FloatingAverage.newBuilder(bitcoinAverage)
-                .setCurrentAverage("1213.82")
+                .setLatestAverage("1213.82")
                 .setClosingDate(1485129600)
                 .addQuotes(newBitcoinQuote)
                 .build();

@@ -23,6 +23,8 @@ import java.io.InputStream;
 import java.time.Clock;
 import java.util.HashMap;
 import java.util.Properties;
+import org.kiwi.alert.DeviationAlert;
+import org.kiwi.alert.SNSAlert;
 import org.kiwi.aws.s3.BinaryBucket;
 import org.kiwi.aws.s3.S3Bucket;
 import org.kiwi.aws.s3.S3KeyProvider;
@@ -63,6 +65,8 @@ public class FloatingAverageLambdaModule extends AbstractModule {
                 .to(HexKeyProvider.class);
         bind(FloatingAverageRepository.class)
                 .to(FloatingAverageS3Repository.class);
+        bind(DeviationAlert.class)
+                .to(SNSAlert.class);
     }
 
     @Provides
