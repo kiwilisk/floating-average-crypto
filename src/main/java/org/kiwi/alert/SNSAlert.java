@@ -1,6 +1,6 @@
 package org.kiwi.alert;
 
-import com.amazonaws.services.sns.AmazonSNSClient;
+import com.amazonaws.services.sns.AmazonSNS;
 import com.amazonaws.services.sns.model.PublishRequest;
 import com.google.inject.Inject;
 import com.google.inject.name.Named;
@@ -10,11 +10,11 @@ import org.kiwi.proto.FloatingAverageProtos.FloatingAverage;
 
 public class SNSAlert implements DeviationAlert {
 
-    private final AmazonSNSClient snsClient;
+    private final AmazonSNS snsClient;
     private final String topic;
 
     @Inject
-    SNSAlert(AmazonSNSClient snsClient, @Named("sns.alert.topic.arn.env.variable") String topicEnvVariable,
+    SNSAlert(AmazonSNS snsClient, @Named("sns.alert.topic.arn.env.variable") String topicEnvVariable,
             EnvironmentVariables environmentVariables) {
         this.snsClient = snsClient;
         this.topic = environmentVariables.getValueFrom(topicEnvVariable)

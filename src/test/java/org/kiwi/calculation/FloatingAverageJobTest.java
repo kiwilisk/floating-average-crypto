@@ -1,6 +1,7 @@
 package org.kiwi.calculation;
 
 import static java.time.ZoneOffset.UTC;
+import static java.util.Collections.emptyList;
 import static java.util.Collections.singleton;
 import static java.util.Collections.singletonList;
 import static org.kiwi.crypto.currency.Currency.newCurrency;
@@ -8,6 +9,7 @@ import static org.kiwi.proto.FloatingAverageProtos.FloatingAverage.newBuilder;
 import static org.kiwi.proto.FloatingAverageTestData.createBitcoinTestData;
 import static org.mockito.Mockito.mock;
 import static org.mockito.Mockito.verify;
+import static org.mockito.Mockito.verifyNoMoreInteractions;
 import static org.mockito.Mockito.when;
 
 import java.math.BigDecimal;
@@ -81,5 +83,16 @@ public class FloatingAverageJobTest {
 
         verify(floatingAverageRepository).store(singleton(newBitcoinAverage));
         verify(deviationAlert).alert(newBitcoinAverage);
+    }
+
+    @Test
+    public void should_store_latest_average_if_no_historical_data_is_available() throws Exception {
+        when(floatingAverageRepository.load(singleton("bitcoin"))).thenReturn(emptyList());
+        when(floatingAverageCalculator.calculate(BITCOIN, null)).thenReturn(BITCOIN_AVERAGE);
+
+        job.execute();
+
+        verify(floatingAverageRepository).store(singleton(BITCOIN_AVERAGE));
+        verifyNoMoreInteractions(deviationAlert);
     }
 }

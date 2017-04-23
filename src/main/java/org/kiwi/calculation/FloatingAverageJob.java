@@ -10,6 +10,7 @@ import java.util.Set;
 import java.util.function.Function;
 import java.util.function.Predicate;
 import org.kiwi.alert.DeviationAlert;
+import org.kiwi.crypto.api.CoinMarketCap;
 import org.kiwi.crypto.api.CurrencyRepository;
 import org.kiwi.crypto.currency.Currency;
 import org.kiwi.proto.FloatingAverageProtos.FloatingAverage;
@@ -23,9 +24,10 @@ public class FloatingAverageJob {
     private final DeviationAlert deviationAlert;
 
     @Inject
-    public FloatingAverageJob(CurrencyRepository currencyRepository,
+    public FloatingAverageJob(@CoinMarketCap CurrencyRepository currencyRepository,
             FloatingAverageRepository floatingAverageRepository,
-            FloatingAverageCalculator floatingAverageCalculator, DeviationAlert deviationAlert) {
+            FloatingAverageCalculator floatingAverageCalculator,
+            DeviationAlert deviationAlert) {
         this.currencyRepository = currencyRepository;
         this.floatingAverageRepository = floatingAverageRepository;
         this.floatingAverageCalculator = floatingAverageCalculator;
@@ -43,7 +45,7 @@ public class FloatingAverageJob {
     private Predicate<FloatingAverage> alertStateHasChanged(Map<String, FloatingAverage> idToAverage) {
         return currentAverage -> {
             FloatingAverage previousAverage = idToAverage.get(currentAverage.getId());
-            return previousAverage.getAlertState() != currentAverage.getAlertState();
+            return previousAverage != null && previousAverage.getAlertState() != currentAverage.getAlertState();
         };
     }
 
