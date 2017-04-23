@@ -12,7 +12,7 @@ public abstract class Configuration {
     public static Configuration newConfiguration(
             @JsonProperty(value = "deviationThreshold") BigDecimal deviationThreshold,
             @JsonProperty(value = "maxDaysCap") int maxDaysCap) {
-        return new AutoValue_ConfigurationLoader_Configuration(deviationThreshold, maxDaysCap);
+        return new AutoValue_Configuration(deviationThreshold, maxDaysCap);
     }
 
     public abstract BigDecimal deviationThreshold();

@@ -5,6 +5,8 @@ import static com.google.inject.name.Names.bindProperties;
 
 import com.amazonaws.services.s3.AmazonS3;
 import com.amazonaws.services.s3.AmazonS3ClientBuilder;
+import com.amazonaws.services.s3.model.GetObjectRequest;
+import com.amazonaws.services.s3.model.S3Object;
 import com.amazonaws.services.sns.AmazonSNS;
 import com.amazonaws.services.sns.AmazonSNSClientBuilder;
 import com.fasterxml.jackson.core.type.TypeReference;
@@ -15,6 +17,7 @@ import com.google.inject.AbstractModule;
 import com.google.inject.Provides;
 import com.google.inject.Singleton;
 import com.google.inject.TypeLiteral;
+import com.google.inject.name.Named;
 import java.io.IOException;
 import java.io.InputStream;
 import java.time.Clock;
@@ -25,6 +28,7 @@ import org.kiwi.aws.s3.S3Bucket;
 import org.kiwi.aws.s3.S3KeyProvider;
 import org.kiwi.config.Configuration;
 import org.kiwi.config.ConfigurationLoader;
+import org.kiwi.config.EnvironmentVariables;
 import org.kiwi.crypto.api.CoinMarketCap;
 import org.kiwi.crypto.api.CoinMarketCapRepository;
 import org.kiwi.crypto.api.CurrencyRepository;
@@ -39,7 +43,7 @@ import org.kiwi.rest.UnirestClient;
 public class FloatingAverageLambdaModule extends AbstractModule {
 
     private static final String CONFIG_PROPERTIES = "/config.properties";
-    private static final String CURRENCY_CONFIG = "/currency.json";
+    private static final String CURRENCY_CONFIG = "currency.json";
 
     @Override
     protected void configure() {
@@ -90,17 +94,26 @@ public class FloatingAverageLambdaModule extends AbstractModule {
 
     @Provides
     @Singleton
-    public ConfigurationLoader configurationLoader(ObjectMapper objectMapper) {
+    public ConfigurationLoader configurationLoader(ObjectMapper objectMapper,
+            @Named("aws.s3.bucket.name") String bucketName, AmazonS3 s3client) {
         TypeReference<HashMap<String, Configuration>> stringToConfigTypeRef
                 = new TypeReference<HashMap<String, Configuration>>() {
         };
-        try (InputStream currencyConfigStream = getClass().getResourceAsStream(CURRENCY_CONFIG)) {
+        GetObjectRequest currencyConfigRequest = new GetObjectRequest(bucketName, CURRENCY_CONFIG);
+        S3Object object = s3client.getObject(currencyConfigRequest);
+        try (InputStream currencyConfigStream = object.getObjectContent()) {
             HashMap<String, Configuration> currencyIdToConfig = objectMapper
                     .readValue(currencyConfigStream, stringToConfigTypeRef);
             return new ConfigurationLoader(currencyIdToConfig);
         } catch (IOException e) {
             throw new RuntimeException("Failed to load currency configuration from file [" + CURRENCY_CONFIG + "]");
         }
+    }
+
+    @Provides
+    @Singleton
+    EnvironmentVariables environmentVariables() {
+        return new EnvironmentVariables(System.getenv());
     }
 
     private Properties loadProperties(String propertiesFile) {
