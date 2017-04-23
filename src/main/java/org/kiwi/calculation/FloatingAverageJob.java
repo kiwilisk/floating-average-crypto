@@ -42,13 +42,6 @@ public class FloatingAverageJob {
         alertForChangedState(idToAverage, latestFloatingAverages);
     }
 
-    private Predicate<FloatingAverage> alertStateHasChanged(Map<String, FloatingAverage> idToAverage) {
-        return currentAverage -> {
-            FloatingAverage previousAverage = idToAverage.get(currentAverage.getId());
-            return previousAverage != null && previousAverage.getAlertState() != currentAverage.getAlertState();
-        };
-    }
-
     private Map<String, FloatingAverage> loadAveragesAndGroupById(Collection<Currency> currencies) {
         Set<String> idSet = currencies.stream()
                 .map(Currency::id)
@@ -77,5 +70,12 @@ public class FloatingAverageJob {
         latestFloatingAverages.stream()
                 .filter(alertStateHasChanged(idToAverage))
                 .forEach(deviationAlert::alert);
+    }
+
+    private Predicate<FloatingAverage> alertStateHasChanged(Map<String, FloatingAverage> idToAverage) {
+        return currentAverage -> {
+            FloatingAverage previousAverage = idToAverage.get(currentAverage.getId());
+            return previousAverage != null && previousAverage.getAlertState() != currentAverage.getAlertState();
+        };
     }
 }
