@@ -8,6 +8,8 @@ import java.util.Collection;
 import java.util.Map;
 import java.util.Set;
 import java.util.function.Function;
+import java.util.function.Predicate;
+import org.kiwi.alert.DeviationAlert;
 import org.kiwi.crypto.api.CurrencyRepository;
 import org.kiwi.crypto.currency.Currency;
 import org.kiwi.proto.FloatingAverageProtos.FloatingAverage;
@@ -18,14 +20,16 @@ public class FloatingAverageJob {
     private final CurrencyRepository currencyRepository;
     private final FloatingAverageRepository floatingAverageRepository;
     private final FloatingAverageCalculator floatingAverageCalculator;
+    private final DeviationAlert deviationAlert;
 
     @Inject
     public FloatingAverageJob(CurrencyRepository currencyRepository,
             FloatingAverageRepository floatingAverageRepository,
-            FloatingAverageCalculator floatingAverageCalculator) {
+            FloatingAverageCalculator floatingAverageCalculator, DeviationAlert deviationAlert) {
         this.currencyRepository = currencyRepository;
         this.floatingAverageRepository = floatingAverageRepository;
         this.floatingAverageCalculator = floatingAverageCalculator;
+        this.deviationAlert = deviationAlert;
     }
 
     public void execute() {
@@ -33,6 +37,14 @@ public class FloatingAverageJob {
         Map<String, FloatingAverage> idToAverage = loadAveragesAndGroupById(currencies);
         Collection<FloatingAverage> latestFloatingAverages = calculateLatestAveragesWith(currencies, idToAverage);
         floatingAverageRepository.store(latestFloatingAverages);
+        alertForChangedState(idToAverage, latestFloatingAverages);
+    }
+
+    private Predicate<FloatingAverage> alertStateHasChanged(Map<String, FloatingAverage> idToAverage) {
+        return currentAverage -> {
+            FloatingAverage previousAverage = idToAverage.get(currentAverage.getId());
+            return previousAverage.getAlertState() != currentAverage.getAlertState();
+        };
     }
 
     private Map<String, FloatingAverage> loadAveragesAndGroupById(Collection<Currency> currencies) {
@@ -56,5 +68,12 @@ public class FloatingAverageJob {
             FloatingAverage floatingAverage = idToAverage.get(currency.id());
             return floatingAverageCalculator.calculate(currency, floatingAverage);
         };
+    }
+
+    private void alertForChangedState(Map<String, FloatingAverage> idToAverage,
+            Collection<FloatingAverage> latestFloatingAverages) {
+        latestFloatingAverages.stream()
+                .filter(alertStateHasChanged(idToAverage))
+                .forEach(deviationAlert::alert);
     }
 }
