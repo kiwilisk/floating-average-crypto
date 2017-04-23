@@ -9,22 +9,15 @@ import static org.mockito.Matchers.any;
 import static org.mockito.Mockito.doThrow;
 import static org.mockito.Mockito.mock;
 import static org.mockito.Mockito.verify;
-import static org.mockito.Mockito.when;
 
 import com.amazonaws.services.s3.AmazonS3Client;
 import com.amazonaws.services.s3.model.GetObjectRequest;
 import com.amazonaws.services.s3.model.ObjectMetadata;
 import com.amazonaws.services.s3.model.PutObjectRequest;
-import com.amazonaws.services.s3.model.S3Object;
-import java.io.ByteArrayInputStream;
-import java.io.IOException;
-import java.io.InputStream;
 import org.junit.Before;
 import org.junit.Test;
 import org.kiwi.proto.FloatingAverageProtos.FloatingAverage;
 import org.mockito.ArgumentCaptor;
-import org.mockito.InOrder;
-import org.mockito.Mockito;
 
 public class BinaryBucketTest {
 
@@ -57,30 +50,6 @@ public class BinaryBucketTest {
         assertThat(metadata.getContentType()).isEqualTo("binary/octet-stream");
         assertThat(metadata.getContentMD5()).isNotEmpty();
         assertThat(metadata.getContentLength()).isEqualTo(floatingAverage.toByteArray().length);
-    }
-
-    @Test
-    public void should_check_for_existing_key_before_retrieving_data() throws Exception {
-        S3Object testS3Object = createTestS3Object();
-        InOrder inOrder = Mockito.inOrder(s3Client);
-        when(s3Client.doesObjectExist(BUCKET_NAME, KEY)).thenReturn(true);
-        when(s3Client.getObject(any(GetObjectRequest.class))).thenReturn(testS3Object);
-
-        binaryBucket.retrieveContentFor(KEY);
-
-        inOrder.verify(s3Client).doesObjectExist(BUCKET_NAME, KEY);
-        inOrder.verify(s3Client).getObject(any(GetObjectRequest.class));
-    }
-
-    @Test
-    public void should_throw_exception_on_non_existing_object() throws Exception {
-        when(s3Client.doesObjectExist(BUCKET_NAME, KEY)).thenReturn(false);
-
-        assertThatExceptionOfType(RuntimeException.class)
-                .isThrownBy(() -> binaryBucket.retrieveContentFor(KEY))
-                .withMessage("Failed to load object with key [e85ca376-8d17-493f-826b-1a5a20c88e76] "
-                        + "from bucket [testBucket]");
-
     }
 
     @Test
@@ -118,17 +87,5 @@ public class BinaryBucketTest {
     public void should_throw_illegal_argument_exception_if_content_is_null() throws Exception {
         assertThatExceptionOfType(IllegalArgumentException.class)
                 .isThrownBy(() -> binaryBucket.storeContent(null));
-    }
-
-    private S3Object createTestS3Object() throws IOException {
-        S3Object s3Object = new S3Object();
-        s3Object.setKey(KEY);
-        ObjectMetadata metadata = new ObjectMetadata();
-        metadata.setContentType("binary/octet-stream");
-        s3Object.setObjectMetadata(metadata);
-        try (InputStream inputStream = new ByteArrayInputStream(floatingAverage.toByteArray())) {
-            s3Object.setObjectContent(inputStream);
-        }
-        return s3Object;
     }
 }

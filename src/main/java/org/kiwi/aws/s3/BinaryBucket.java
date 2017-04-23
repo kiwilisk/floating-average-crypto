@@ -71,15 +71,11 @@ public class BinaryBucket implements S3Bucket {
     }
 
     private S3Content retrieveWith(String key) throws IOException {
-        if (s3Client.doesObjectExist(bucketName, key)) {
-            GetObjectRequest getObjectRequest = new GetObjectRequest(bucketName, key);
-            S3Object s3Object = s3Client.getObject(getObjectRequest);
-            byte[] bytes = getBytesOf(s3Object);
-            String contentType = s3Object.getObjectMetadata().getContentType();
-            return S3Content.newS3Content(key, bytes, contentType);
-        }
-        throw new RuntimeException("Failed to retrieve Object with key [" + key + "] "
-                + "from [" + bucketName + "]. Object does not exist.");
+        GetObjectRequest getObjectRequest = new GetObjectRequest(bucketName, key);
+        S3Object s3Object = s3Client.getObject(getObjectRequest);
+        byte[] bytes = getBytesOf(s3Object);
+        String contentType = s3Object.getObjectMetadata().getContentType();
+        return S3Content.newS3Content(key, bytes, contentType);
     }
 
     private byte[] getBytesOf(S3Object s3Object) throws IOException {
