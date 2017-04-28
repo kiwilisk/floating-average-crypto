@@ -70,7 +70,9 @@ public class FloatingAverageJob {
         Set<FloatingAverage> averagesWithChangedState = latestFloatingAverages.stream()
                 .filter(alertStateHasChanged(idToAverage))
                 .collect(toSet());
-        deviationAlert.alert(averagesWithChangedState);
+        if (!averagesWithChangedState.isEmpty()) {
+            deviationAlert.alert(averagesWithChangedState);
+        }
     }
 
     private Predicate<FloatingAverage> alertStateHasChanged(Map<String, FloatingAverage> idToAverage) {

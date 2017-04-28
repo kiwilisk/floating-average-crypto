@@ -33,6 +33,9 @@ public class SNSAlert implements DeviationAlert {
 
     @Override
     public void alert(Collection<FloatingAverage> floatingAverage) {
+        if (floatingAverage.isEmpty()) {
+            return;
+        }
         String multipleMessagesBody = floatingAverage.stream()
                 .map(this::createMessageBodyWith)
                 .collect(joining("\n\n"));

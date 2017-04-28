@@ -4,10 +4,12 @@ import static java.util.Arrays.asList;
 import static org.kiwi.proto.FloatingAverageProtos.FloatingAverage.newBuilder;
 import static org.mockito.Mockito.mock;
 import static org.mockito.Mockito.verify;
+import static org.mockito.Mockito.verifyNoMoreInteractions;
 import static org.mockito.Mockito.when;
 
 import com.amazonaws.services.sns.AmazonSNSClient;
 import com.amazonaws.services.sns.model.PublishRequest;
+import java.util.Collections;
 import java.util.Optional;
 import org.junit.Before;
 import org.junit.Test;
@@ -88,5 +90,12 @@ public class SNSAlertTest {
                 .withSubject("Floating average warning")
                 .withMessage(expectedMessage);
         verify(snsClient).publish(expectedPublishRequest);
+    }
+
+    @Test
+    public void should_not_publish_if_averages_are_emtpy() throws Exception {
+        snsAlert.alert(Collections.emptyList());
+
+        verifyNoMoreInteractions(snsClient);
     }
 }
