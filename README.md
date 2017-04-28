@@ -14,6 +14,7 @@ It will notify any subscribers to an AWS SNSN topic if the current value of the 
 ### how to use
 * have an AWS Account
 * create an S3 bucket
+* upload currency.json to this bucket and configure individual currencies if necessary
 * provide S3 bucket in the config.properties file as _aws.s3.bucket.name_
 * mvn clean package
 * create a Java 8 Lambda function, provide a SNS topic as Environment Variable _floatingAverageWarningTopic_
@@ -26,6 +27,7 @@ Technology used in this one:
 * [Google Guice](https://github.com/google/guice) 
 * [Google AutoValue](https://github.com/google/auto/tree/master/value) 
 * [Google Protocol Buffers](https://developers.google.com/protocol-buffers/)
+* [AWS Lambda](https://aws.amazon.com/lambda/)
 * [AWS S3](https://aws.amazon.com/s3/)
 * [AWS SNS](https://aws.amazon.com/sns/)
 * [UniRest](http://unirest.io/)
