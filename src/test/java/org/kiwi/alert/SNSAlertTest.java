@@ -1,5 +1,6 @@
 package org.kiwi.alert;
 
+import static java.util.Arrays.asList;
 import static org.kiwi.proto.FloatingAverageProtos.FloatingAverage.newBuilder;
 import static org.mockito.Mockito.mock;
 import static org.mockito.Mockito.verify;
@@ -40,7 +41,7 @@ public class SNSAlertTest {
 
         snsAlert.alert(bitcoinTestData);
 
-        String expectedMessage = "Recommendation: buy!\n"
+        String expectedMessage = "Recommendation: buy Bitcoin!\n"
                 + "The current closing value 1234.55 of observed asset Bitcoin "
                 + "deviates more than 5.0 percent from the current floating average of 1134.23.";
         PublishRequest expectedPublishRequest = new PublishRequest()
@@ -56,9 +57,32 @@ public class SNSAlertTest {
 
         snsAlert.alert(bitcoinTestData);
 
-        String expectedMessage = "Recommendation: sell!\n"
+        String expectedMessage = "Recommendation: sell Bitcoin!\n"
                 + "The current closing value 1210.02 of observed asset Bitcoin "
                 + "deviates more than 4.0 percent from the current floating average of 1229.68.";
+        PublishRequest expectedPublishRequest = new PublishRequest()
+                .withTopicArn(TOPIC_ARN)
+                .withSubject("Floating average warning")
+                .withMessage(expectedMessage);
+        verify(snsClient).publish(expectedPublishRequest);
+    }
+
+    @Test
+    public void should_send_multiple_averages_in_one_message() throws Exception {
+        FloatingAverage floatingAverage = FloatingAverageTestData.createBitcoinTestData();
+        FloatingAverage bitcoinTestData = newBuilder(floatingAverage)
+                .setDeviationThreshold("5.0")
+                .setLatestQuoteValue("1234.55")
+                .setLatestAverage("1134.23").build();
+
+        snsAlert.alert(asList(bitcoinTestData, bitcoinTestData));
+
+        String expectedMessage = "Recommendation: buy Bitcoin!\n"
+                + "The current closing value 1234.55 of observed asset Bitcoin "
+                + "deviates more than 5.0 percent from the current floating average of 1134.23.\n\n" +
+                "Recommendation: buy Bitcoin!\n"
+                + "The current closing value 1234.55 of observed asset Bitcoin "
+                + "deviates more than 5.0 percent from the current floating average of 1134.23.";
         PublishRequest expectedPublishRequest = new PublishRequest()
                 .withTopicArn(TOPIC_ARN)
                 .withSubject("Floating average warning")

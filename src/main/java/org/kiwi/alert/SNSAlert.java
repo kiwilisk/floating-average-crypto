@@ -1,10 +1,13 @@
 package org.kiwi.alert;
 
+import static java.util.stream.Collectors.joining;
+
 import com.amazonaws.services.sns.AmazonSNS;
 import com.amazonaws.services.sns.model.PublishRequest;
 import com.google.inject.Inject;
 import com.google.inject.name.Named;
 import java.math.BigDecimal;
+import java.util.Collection;
 import org.kiwi.config.EnvironmentVariables;
 import org.kiwi.proto.FloatingAverageProtos.FloatingAverage;
 
@@ -24,26 +27,37 @@ public class SNSAlert implements DeviationAlert {
 
     @Override
     public void alert(FloatingAverage floatingAverage) {
-        PublishRequest publishRequest = createPublishRequestWith(floatingAverage);
-        snsClient.publish(publishRequest);
+        String messageBody = createMessageBodyWith(floatingAverage);
+        publish(messageBody);
     }
 
-    private PublishRequest createPublishRequestWith(FloatingAverage floatingAverage) {
-        String subject = "Floating average warning";
-        String messageBody = createMessageBodyWith(floatingAverage);
+    @Override
+    public void alert(Collection<FloatingAverage> floatingAverage) {
+        String multipleMessagesBody = floatingAverage.stream()
+                .map(this::createMessageBodyWith)
+                .collect(joining("\n\n"));
+        publish(multipleMessagesBody);
+    }
+
+    private PublishRequest createPublishRequestWith(String messageBody) {
         return new PublishRequest()
                 .withTopicArn(topic)
-                .withSubject(subject)
+                .withSubject("Floating average warning")
                 .withMessage(messageBody);
     }
 
     private String createMessageBodyWith(FloatingAverage floatingAverage) {
         String recommendation = isValueHigherThanAverage(floatingAverage) ? "buy" : "sell";
-        return "Recommendation: " + recommendation + "!\n" +
+        return "Recommendation: " + recommendation + " " + floatingAverage.getName() + "!\n" +
                 "The current closing value " + floatingAverage.getLatestQuoteValue() +
                 " of observed asset " + floatingAverage.getName() +
                 " deviates more than " + floatingAverage.getDeviationThreshold() +
                 " percent from the current floating average of " + floatingAverage.getLatestAverage() + ".";
+    }
+
+    private void publish(String messageBody) {
+        PublishRequest publishRequest = createPublishRequestWith(messageBody);
+        snsClient.publish(publishRequest);
     }
 
     private boolean isValueHigherThanAverage(FloatingAverage floatingAverage) {

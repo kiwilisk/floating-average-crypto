@@ -82,7 +82,7 @@ public class FloatingAverageJobTest {
         job.execute();
 
         verify(floatingAverageRepository).store(singleton(newBitcoinAverage));
-        verify(deviationAlert).alert(newBitcoinAverage);
+        verify(deviationAlert).alert(singleton(newBitcoinAverage));
     }
 
     @Test
