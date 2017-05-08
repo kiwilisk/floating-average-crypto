@@ -6,6 +6,7 @@ import static org.assertj.core.api.Assertions.assertThat;
 import static org.kiwi.config.Configuration.newConfiguration;
 import static org.kiwi.crypto.currency.Currency.newCurrency;
 import static org.kiwi.proto.FloatingAverageProtos.FloatingAverage.AlertState.NONE;
+import static org.kiwi.proto.FloatingAverageProtos.FloatingAverage.AlertState.SELL;
 import static org.kiwi.proto.FloatingAverageProtos.FloatingAverage.newBuilder;
 import static org.kiwi.proto.FloatingAverageTestData.createBitcoinTestData;
 import static org.kiwi.proto.FloatingAverageTestData.createEthereumTestData;
@@ -103,5 +104,18 @@ public class FloatingAverageCalculatorTest {
                 .setUpdatedAt(1485043200L)
                 .build();
         assertThat(latestAverage.getQuotesList()).doesNotContain(replacedQuote);
+    }
+
+    @Test
+    public void should_keep_old_state_if_new_evaluates_to_none() throws Exception {
+        FloatingAverage floatingAverageSell = FloatingAverage.newBuilder(createBitcoinTestData())
+                .setAlertState(SELL).build();
+        Currency bitcoin = newCurrency("bitcoin", "Bitcoin", "BTC", new BigDecimal("1229.68"),
+                LocalDate.of(2017, 1, 24).atStartOfDay().toInstant(UTC));
+
+        FloatingAverage latestAverage = calculator.calculate(bitcoin, floatingAverageSell);
+
+        assertThat(latestAverage.getAlertState()).isEqualTo(SELL);
+
     }
 }

@@ -2,5 +2,5 @@ package org.kiwi.rest;
 
 public interface RestClient {
 
-    String getGetResponseFrom(String endpoint);
+    String getResponseAsJsonFrom(String endpoint);
 }

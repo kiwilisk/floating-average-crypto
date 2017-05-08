@@ -32,12 +32,12 @@ public class CoinMarketCapRepositoryTest {
 
     @Test
     public void should_call_rest_client_and_mapper_and_return_result() throws Exception {
-        when(restClient.getGetResponseFrom(ENDPOINT)).thenReturn("restAnswer");
+        when(restClient.getResponseAsJsonFrom(ENDPOINT)).thenReturn("restAnswer");
         when(mapper.map("restAnswer")).thenReturn(emptySet());
 
         Collection<Currency> currencies = coinMarketCapRepository.retrieveCurrencies();
 
-        verify(restClient).getGetResponseFrom(ENDPOINT);
+        verify(restClient).getResponseAsJsonFrom(ENDPOINT);
         verifyNoMoreInteractions(restClient);
         verify(mapper).map("restAnswer");
         verifyNoMoreInteractions(mapper);

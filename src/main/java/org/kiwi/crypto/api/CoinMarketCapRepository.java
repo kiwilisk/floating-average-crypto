@@ -24,7 +24,7 @@ public class CoinMarketCapRepository implements CurrencyRepository {
     @Override
     public Collection<Currency> retrieveCurrencies() {
         try {
-            String response = restClient.getGetResponseFrom(endpoint);
+            String response = restClient.getResponseAsJsonFrom(endpoint);
             return currencyMapper.map(response);
         } catch (Exception e) {
             throw new RuntimeException("Failed to load crypto currencies with " + this.getClass().getSimpleName(), e);

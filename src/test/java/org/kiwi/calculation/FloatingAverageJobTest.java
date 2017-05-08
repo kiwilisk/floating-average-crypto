@@ -63,6 +63,7 @@ public class FloatingAverageJobTest {
         job.execute();
 
         verify(floatingAverageRepository).store(singleton(newBitcoinAverage));
+        verifyNoMoreInteractions(deviationAlert);
     }
 
     @Test
@@ -83,6 +84,29 @@ public class FloatingAverageJobTest {
 
         verify(floatingAverageRepository).store(singleton(newBitcoinAverage));
         verify(deviationAlert).alert(singleton(newBitcoinAverage));
+    }
+
+    @Test
+    public void should_not_alert_again_on_same_state() throws Exception {
+        FloatingAverage currentAverage = newBuilder(BITCOIN_AVERAGE)
+                .setAlertState(AlertState.SELL).build();
+        when(floatingAverageRepository.load(singleton("bitcoin"))).thenReturn(singletonList(currentAverage));
+        Quote newBitcoinQuote = Quote.newBuilder()
+                .setValue("1229.68")
+                .setAverage("1213.82")
+                .setUpdatedAt(1485129600).build();
+        FloatingAverage newBitcoinAverage = newBuilder(BITCOIN_AVERAGE)
+                .setLatestAverage("1213.82")
+                .setClosingDate(1485129600)
+                .addQuotes(newBitcoinQuote)
+                .setAlertState(AlertState.SELL)
+                .build();
+        when(floatingAverageCalculator.calculate(BITCOIN, currentAverage)).thenReturn(newBitcoinAverage);
+
+        job.execute();
+
+        verify(floatingAverageRepository).store(singleton(newBitcoinAverage));
+        verifyNoMoreInteractions(deviationAlert);
     }
 
     @Test

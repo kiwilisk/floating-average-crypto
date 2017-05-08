@@ -2,6 +2,7 @@ package org.kiwi.calculation;
 
 import static java.util.Comparator.comparingLong;
 import static java.util.stream.Collectors.toList;
+import static org.kiwi.proto.FloatingAverageProtos.FloatingAverage.AlertState.NONE;
 import static org.kiwi.proto.FloatingAverageProtos.FloatingAverage.newBuilder;
 
 import java.math.BigDecimal;
@@ -34,8 +35,7 @@ class FloatingAverageCalculator {
         historicalQuotes.add(latestQuote);
         Configuration configuration = configurationLoader.loadFor(currency.id());
         BigDecimal deviationThreshold = configuration.deviationThreshold();
-        AlertState state = new AverageAlertState()
-                .evaluateStateWith(latestAverage, latestValue, deviationThreshold);
+        AlertState state = evaluateAlertState(floatingAverage, latestValue, latestAverage, deviationThreshold);
 
         return newBuilder()
                 .setId(currency.id())
@@ -62,14 +62,16 @@ class FloatingAverageCalculator {
     private Collection<Quote> getHistoricalQuotes(FloatingAverage floatingAverage) {
         if (floatingAverage != null) {
             List<Quote> quotesList = new ArrayList<>(floatingAverage.getQuotesList());
-            boolean isMaxDaysCapReached =
-                    quotesList.size() != 0 && quotesList.size() == floatingAverage.getMaxDaysCap();
-            if (isMaxDaysCapReached) {
+            if (isMaxDaysCapReached(floatingAverage, quotesList)) {
                 removeOldestQuoteFrom(quotesList);
             }
             return quotesList;
         }
         return new ArrayList<>();
+    }
+
+    private boolean isMaxDaysCapReached(FloatingAverage floatingAverage, List<Quote> quotesList) {
+        return quotesList.size() != 0 && quotesList.size() == floatingAverage.getMaxDaysCap();
     }
 
     private Quote createQuoteWith(BigDecimal latestValue, BigDecimal latestAverage, long dateInEpochSeconds) {
@@ -83,5 +85,15 @@ class FloatingAverageCalculator {
     private void removeOldestQuoteFrom(List<Quote> quotesList) {
         quotesList.sort(comparingLong(Quote::getUpdatedAt));
         quotesList.remove(0);
+    }
+
+    private AlertState evaluateAlertState(FloatingAverage floatingAverage, BigDecimal latestValue,
+            BigDecimal latestAverage, BigDecimal deviationThreshold) {
+        AlertState state = new AverageAlertState()
+                .evaluateStateWith(latestAverage, latestValue, deviationThreshold);
+        if (floatingAverage != null && state == NONE) {
+            state = floatingAverage.getAlertState();
+        }
+        return state;
     }
 }
