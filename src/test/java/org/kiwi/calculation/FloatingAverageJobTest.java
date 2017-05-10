@@ -12,11 +12,13 @@ import static org.mockito.Mockito.verify;
 import static org.mockito.Mockito.verifyNoMoreInteractions;
 import static org.mockito.Mockito.when;
 
+import com.amazonaws.services.cloudwatch.AmazonCloudWatch;
 import java.math.BigDecimal;
 import java.time.LocalDate;
 import org.junit.Before;
 import org.junit.Test;
 import org.kiwi.alert.DeviationAlert;
+import org.kiwi.aws.metrics.CloudWatchMetricsWriter;
 import org.kiwi.crypto.api.CurrencyRepository;
 import org.kiwi.crypto.currency.Currency;
 import org.kiwi.proto.FloatingAverageProtos.FloatingAverage;
@@ -43,8 +45,9 @@ public class FloatingAverageJobTest {
         when(floatingAverageRepository.load(singleton("bitcoin"))).thenReturn(singletonList(BITCOIN_AVERAGE));
         floatingAverageCalculator = mock(FloatingAverageCalculator.class);
         deviationAlert = mock(DeviationAlert.class);
+        CloudWatchMetricsWriter cloudWatchMetricsWriter = new TestMetricWriter();
         job = new FloatingAverageJob(currencyRepository, floatingAverageRepository, floatingAverageCalculator,
-                deviationAlert);
+                deviationAlert, cloudWatchMetricsWriter);
     }
 
     @Test
@@ -118,5 +121,12 @@ public class FloatingAverageJobTest {
 
         verify(floatingAverageRepository).store(singleton(BITCOIN_AVERAGE));
         verifyNoMoreInteractions(deviationAlert);
+    }
+
+    private final static class TestMetricWriter extends CloudWatchMetricsWriter {
+
+        private TestMetricWriter() {
+            super(mock(AmazonCloudWatch.class));
+        }
     }
 }

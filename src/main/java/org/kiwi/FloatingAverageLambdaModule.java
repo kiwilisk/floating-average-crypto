@@ -3,12 +3,14 @@ package org.kiwi;
 import static com.fasterxml.jackson.databind.SerializationFeature.WRITE_DATES_AS_TIMESTAMPS;
 import static com.google.inject.name.Names.bindProperties;
 
+import com.amazonaws.services.cloudwatch.AmazonCloudWatch;
+import com.amazonaws.services.cloudwatch.AmazonCloudWatchAsyncClientBuilder;
 import com.amazonaws.services.s3.AmazonS3;
 import com.amazonaws.services.s3.AmazonS3ClientBuilder;
 import com.amazonaws.services.s3.model.GetObjectRequest;
 import com.amazonaws.services.s3.model.S3Object;
 import com.amazonaws.services.sns.AmazonSNS;
-import com.amazonaws.services.sns.AmazonSNSClientBuilder;
+import com.amazonaws.services.sns.AmazonSNSAsyncClientBuilder;
 import com.fasterxml.jackson.core.type.TypeReference;
 import com.fasterxml.jackson.databind.ObjectMapper;
 import com.fasterxml.jackson.datatype.jdk8.Jdk8Module;
@@ -87,13 +89,19 @@ public class FloatingAverageLambdaModule extends AbstractModule {
     @Provides
     @Singleton
     public AmazonSNS amazonSNSClient() {
-        return AmazonSNSClientBuilder.defaultClient();
+        return AmazonSNSAsyncClientBuilder.defaultClient();
     }
 
     @Provides
     @Singleton
     public AmazonS3 s3Client() {
         return AmazonS3ClientBuilder.defaultClient();
+    }
+
+    @Provides
+    @Singleton
+    public AmazonCloudWatch cloudWatchClient() {
+        return AmazonCloudWatchAsyncClientBuilder.defaultClient();
     }
 
     @Provides

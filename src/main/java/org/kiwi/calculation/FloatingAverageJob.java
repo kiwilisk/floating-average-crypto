@@ -10,6 +10,7 @@ import java.util.Set;
 import java.util.function.Function;
 import java.util.function.Predicate;
 import org.kiwi.alert.DeviationAlert;
+import org.kiwi.aws.metrics.CloudWatchMetricsWriter;
 import org.kiwi.crypto.api.CoinMarketCap;
 import org.kiwi.crypto.api.CurrencyRepository;
 import org.kiwi.crypto.currency.Currency;
@@ -22,23 +23,33 @@ public class FloatingAverageJob {
     private final FloatingAverageRepository floatingAverageRepository;
     private final FloatingAverageCalculator floatingAverageCalculator;
     private final DeviationAlert deviationAlert;
+    private final CloudWatchMetricsWriter metricsWriter;
 
     @Inject
     public FloatingAverageJob(@CoinMarketCap CurrencyRepository currencyRepository,
             FloatingAverageRepository floatingAverageRepository,
             FloatingAverageCalculator floatingAverageCalculator,
-            DeviationAlert deviationAlert) {
+            DeviationAlert deviationAlert, CloudWatchMetricsWriter metricsWriter) {
         this.currencyRepository = currencyRepository;
         this.floatingAverageRepository = floatingAverageRepository;
         this.floatingAverageCalculator = floatingAverageCalculator;
         this.deviationAlert = deviationAlert;
+        this.metricsWriter = metricsWriter;
     }
 
     public void execute() {
-        Collection<Currency> currencies = currencyRepository.retrieveCurrencies();
-        Map<String, FloatingAverage> idToAverage = loadAveragesAndGroupById(currencies);
-        Collection<FloatingAverage> latestFloatingAverages = calculateLatestAveragesWith(currencies, idToAverage);
-        floatingAverageRepository.store(latestFloatingAverages);
+        Collection<Currency> currencies = metricsWriter.executeWithMetric(
+                currencyRepository::retrieveCurrencies, "currencyAPILoad");
+
+        Map<String, FloatingAverage> idToAverage = metricsWriter.executeWithMetric(
+                () -> loadAveragesAndGroupById(currencies), "s3AverageLoad");
+
+        Collection<FloatingAverage> latestFloatingAverages =
+                metricsWriter.executeWithMetric(() -> calculateLatestAveragesWith(currencies, idToAverage),
+                        "averageCalculation");
+        metricsWriter.executeWithMetric(
+                () -> floatingAverageRepository.store(latestFloatingAverages), "s3AverageStore");
+
         alertForChangedState(idToAverage, latestFloatingAverages);
     }
 
