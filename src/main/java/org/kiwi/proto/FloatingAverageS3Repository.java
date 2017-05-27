@@ -53,9 +53,6 @@ public class FloatingAverageS3Repository implements FloatingAverageRepository {
 
     @Override
     public void store(FloatingAverage floatingAverage) {
-        if (floatingAverage == null) {
-            throw new IllegalArgumentException("FloatingAverage must not be null");
-        }
         String key = keyProvider.createKeyFor(floatingAverage.getId());
         byte[] bytes = floatingAverage.toByteArray();
         S3Content content = createS3ContentWith(key, bytes);

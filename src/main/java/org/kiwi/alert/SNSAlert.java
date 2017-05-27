@@ -8,10 +8,13 @@ import com.google.inject.Inject;
 import com.google.inject.name.Named;
 import java.math.BigDecimal;
 import java.util.Collection;
+import org.apache.log4j.Logger;
 import org.kiwi.config.EnvironmentVariables;
 import org.kiwi.proto.FloatingAverageProtos.FloatingAverage;
 
 public class SNSAlert implements DeviationAlert {
+
+    private static final Logger LOGGER = Logger.getLogger(SNSAlert.class);
 
     private final AmazonSNS snsClient;
     private final String topic;
@@ -60,7 +63,11 @@ public class SNSAlert implements DeviationAlert {
 
     private void publish(String messageBody) {
         PublishRequest publishRequest = createPublishRequestWith(messageBody);
-        snsClient.publish(publishRequest);
+        try {
+            snsClient.publish(publishRequest);
+        } catch (Exception e) {
+            LOGGER.error("Failed to publish message [" + messageBody + "] to topic [" + topic + "]", e);
+        }
     }
 
     private boolean isValueHigherThanAverage(FloatingAverage floatingAverage) {
