@@ -2,8 +2,10 @@ package org.kiwi.calculation;
 
 import static java.util.stream.Collectors.toMap;
 import static java.util.stream.Collectors.toSet;
+import static org.kiwi.alert.Notification.NOTIFICATION_LIST;
 
 import com.google.inject.Inject;
+import com.google.inject.name.Named;
 import java.util.Collection;
 import java.util.Map;
 import java.util.Set;
@@ -14,27 +16,31 @@ import org.kiwi.aws.metrics.CloudWatchMetricsWriter;
 import org.kiwi.crypto.api.CoinMarketCap;
 import org.kiwi.crypto.api.CurrencyRepository;
 import org.kiwi.crypto.currency.Currency;
+import org.kiwi.proto.DepotRepository;
+import org.kiwi.proto.FloatingAverageProtos.Depot;
 import org.kiwi.proto.FloatingAverageProtos.FloatingAverage;
-import org.kiwi.proto.FloatingAverageRepository;
 
 public class FloatingAverageJob {
 
     private final CurrencyRepository currencyRepository;
-    private final FloatingAverageRepository floatingAverageRepository;
+    private final DepotRepository depotRepository;
     private final FloatingAverageCalculator floatingAverageCalculator;
     private final DeviationAlert deviationAlert;
     private final CloudWatchMetricsWriter metricsWriter;
+    private final String depotId;
 
     @Inject
     public FloatingAverageJob(@CoinMarketCap CurrencyRepository currencyRepository,
-            FloatingAverageRepository floatingAverageRepository,
+            DepotRepository depotRepository,
             FloatingAverageCalculator floatingAverageCalculator,
-            DeviationAlert deviationAlert, CloudWatchMetricsWriter metricsWriter) {
+            DeviationAlert deviationAlert, CloudWatchMetricsWriter metricsWriter,
+            @Named("crypto.depot.id") String depotId) {
         this.currencyRepository = currencyRepository;
-        this.floatingAverageRepository = floatingAverageRepository;
+        this.depotRepository = depotRepository;
         this.floatingAverageCalculator = floatingAverageCalculator;
         this.deviationAlert = deviationAlert;
         this.metricsWriter = metricsWriter;
+        this.depotId = depotId;
     }
 
     public void execute() {
@@ -42,22 +48,19 @@ public class FloatingAverageJob {
                 currencyRepository::retrieveCurrencies, "currencyAPILoad");
 
         Map<String, FloatingAverage> idToAverage = metricsWriter.executeWithMetric(
-                () -> loadAveragesAndGroupById(currencies), "s3AverageLoad");
+                this::loadAveragesAndGroupById, "s3AverageLoad");
 
         Collection<FloatingAverage> latestFloatingAverages =
                 metricsWriter.executeWithMetric(() -> calculateLatestAveragesWith(currencies, idToAverage),
                         "averageCalculation");
-        metricsWriter.executeWithMetric(
-                () -> floatingAverageRepository.store(latestFloatingAverages), "s3AverageStore");
+
+        metricsWriter.executeWithMetric(() -> store(latestFloatingAverages), "s3AverageStore");
 
         alertForChangedState(idToAverage, latestFloatingAverages);
     }
 
-    private Map<String, FloatingAverage> loadAveragesAndGroupById(Collection<Currency> currencies) {
-        Set<String> idSet = currencies.stream()
-                .map(Currency::id)
-                .collect(toSet());
-        return floatingAverageRepository.load(idSet).stream()
+    private Map<String, FloatingAverage> loadAveragesAndGroupById() {
+        return depotRepository.load(depotId).getFloatingAveragesList().stream()
                 .collect(toMap(FloatingAverage::getId, floatingAverage -> floatingAverage));
     }
 
@@ -79,6 +82,7 @@ public class FloatingAverageJob {
     private void alertForChangedState(Map<String, FloatingAverage> idToAverage,
             Collection<FloatingAverage> latestFloatingAverages) {
         Set<FloatingAverage> averagesWithChangedState = latestFloatingAverages.stream()
+                .filter(isInNotifyList())
                 .filter(alertStateHasChanged(idToAverage))
                 .collect(toSet());
         if (!averagesWithChangedState.isEmpty()) {
@@ -86,10 +90,22 @@ public class FloatingAverageJob {
         }
     }
 
+    private Predicate<FloatingAverage> isInNotifyList() {
+        return floatingAverage -> NOTIFICATION_LIST.contains(floatingAverage.getId());
+    }
+
     private Predicate<FloatingAverage> alertStateHasChanged(Map<String, FloatingAverage> idToAverage) {
         return currentAverage -> {
             FloatingAverage previousAverage = idToAverage.get(currentAverage.getId());
             return previousAverage != null && previousAverage.getAlertState() != currentAverage.getAlertState();
         };
+    }
+
+    private void store(Collection<FloatingAverage> floatingAverages) {
+        Depot depot = Depot.newBuilder()
+                .setId(depotId)
+                .addAllFloatingAverages(floatingAverages)
+                .build();
+        depotRepository.store(depot);
     }
 }

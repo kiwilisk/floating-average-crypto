@@ -38,8 +38,8 @@ import org.kiwi.crypto.api.CoinMarketCapRepository;
 import org.kiwi.crypto.api.CurrencyRepository;
 import org.kiwi.crypto.currency.CoinMarketCapMapper;
 import org.kiwi.crypto.currency.CurrencyMapper;
-import org.kiwi.proto.FloatingAverageRepository;
-import org.kiwi.proto.FloatingAverageS3Repository;
+import org.kiwi.proto.DepotRepository;
+import org.kiwi.proto.DepotS3Repository;
 import org.kiwi.proto.HexKeyProvider;
 import org.kiwi.rest.RestClient;
 import org.kiwi.rest.UnirestClient;
@@ -65,8 +65,8 @@ public class FloatingAverageLambdaModule extends AbstractModule {
                 .to(BinaryBucket.class);
         bind(S3KeyProvider.class)
                 .to(HexKeyProvider.class);
-        bind(FloatingAverageRepository.class)
-                .to(FloatingAverageS3Repository.class);
+        bind(DepotRepository.class)
+                .to(DepotS3Repository.class);
         bind(DeviationAlert.class)
                 .to(SNSAlert.class);
     }
