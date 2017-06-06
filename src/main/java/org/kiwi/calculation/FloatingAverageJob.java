@@ -1,8 +1,8 @@
 package org.kiwi.calculation;
 
+import static java.util.Collections.emptyMap;
 import static java.util.stream.Collectors.toMap;
 import static java.util.stream.Collectors.toSet;
-import static org.kiwi.alert.Notification.NOTIFICATION_LIST;
 
 import com.google.inject.Inject;
 import com.google.inject.name.Named;
@@ -46,21 +46,29 @@ public class FloatingAverageJob {
     public void execute() {
         Collection<Currency> currencies = metricsWriter.executeWithMetric(
                 currencyRepository::retrieveCurrencies, "currencyAPILoad");
-
         Map<String, FloatingAverage> idToAverage = metricsWriter.executeWithMetric(
                 this::loadAveragesAndGroupById, "s3AverageLoad");
-
         Collection<FloatingAverage> latestFloatingAverages =
                 metricsWriter.executeWithMetric(() -> calculateLatestAveragesWith(currencies, idToAverage),
                         "averageCalculation");
 
         metricsWriter.executeWithMetric(() -> store(latestFloatingAverages), "s3AverageStore");
 
-        alertForChangedState(idToAverage, latestFloatingAverages);
+        Set<String> top100CurrencyIds = currencies.stream()
+                .filter(currency -> currency.rank() <= 100)
+                .map(Currency::id)
+                .collect(toSet());
+        alertForChangedState(idToAverage, latestFloatingAverages, top100CurrencyIds);
     }
 
     private Map<String, FloatingAverage> loadAveragesAndGroupById() {
-        return depotRepository.load(depotId).getFloatingAveragesList().stream()
+        return depotRepository.load(depotId)
+                .map(this::toIdToAverageMap)
+                .orElse(emptyMap());
+    }
+
+    private Map<String, FloatingAverage> toIdToAverageMap(Depot depot) {
+        return depot.getFloatingAveragesList().stream()
                 .collect(toMap(FloatingAverage::getId, floatingAverage -> floatingAverage));
     }
 
@@ -80,18 +88,15 @@ public class FloatingAverageJob {
     }
 
     private void alertForChangedState(Map<String, FloatingAverage> idToAverage,
-            Collection<FloatingAverage> latestFloatingAverages) {
+            Collection<FloatingAverage> latestFloatingAverages,
+            Collection<String> top100CurrencyIds) {
         Set<FloatingAverage> averagesWithChangedState = latestFloatingAverages.stream()
-                .filter(isInNotifyList())
+                .filter(floatingAverage -> top100CurrencyIds.contains(floatingAverage.getId()))
                 .filter(alertStateHasChanged(idToAverage))
                 .collect(toSet());
         if (!averagesWithChangedState.isEmpty()) {
             deviationAlert.alert(averagesWithChangedState);
         }
-    }
-
-    private Predicate<FloatingAverage> isInNotifyList() {
-        return floatingAverage -> NOTIFICATION_LIST.contains(floatingAverage.getId());
     }
 
     private Predicate<FloatingAverage> alertStateHasChanged(Map<String, FloatingAverage> idToAverage) {

@@ -1,10 +1,11 @@
 package org.kiwi.proto;
 
+import java.util.Optional;
 import org.kiwi.proto.FloatingAverageProtos.Depot;
 
 public interface DepotRepository {
 
-    Depot load(String id);
+    Optional<Depot> load(String id);
 
     void store(Depot depot);
 }

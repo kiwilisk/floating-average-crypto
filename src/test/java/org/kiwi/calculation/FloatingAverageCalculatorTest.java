@@ -37,7 +37,7 @@ public class FloatingAverageCalculatorTest {
     @Test
     public void should_create_average_if_no_historical_quotes_are_given() throws Exception {
         Currency etherum = newCurrency("ethereum", "Ethereum", "ETH", new BigDecimal("18.2812"),
-                LocalDate.of(2017, 1, 23).atStartOfDay().toInstant(UTC));
+                LocalDate.of(2017, 1, 23).atStartOfDay().toInstant(UTC), 0);
         FloatingAverage averagWithoutQuotes = newBuilder(createEthereumTestData())
                 .clearQuotes()
                 .build();
@@ -67,7 +67,7 @@ public class FloatingAverageCalculatorTest {
     @Test
     public void should_append_latest_to_historical_quotes_and_calculate_average() throws Exception {
         Currency bitcoin = newCurrency("bitcoin", "Bitcoin", "BTC", new BigDecimal("1229.68"),
-                LocalDate.of(2017, 1, 23).atStartOfDay().toInstant(UTC));
+                LocalDate.of(2017, 1, 23).atStartOfDay().toInstant(UTC), 0);
         FloatingAverage bitcoinAverage = createBitcoinTestData();
 
         FloatingAverage latestAverage = calculator.calculate(bitcoin, bitcoinAverage);
@@ -93,7 +93,7 @@ public class FloatingAverageCalculatorTest {
                 .setMaxDaysCap(2)
                 .build();
         Currency bitcoin = newCurrency("bitcoin", "Bitcoin", "BTC", new BigDecimal("1229.68"),
-                LocalDate.of(2017, 1, 24).atStartOfDay().toInstant(UTC));
+                LocalDate.of(2017, 1, 24).atStartOfDay().toInstant(UTC), 0);
 
         FloatingAverage latestAverage = calculator.calculate(bitcoin, floatingAverageWithCap);
 
@@ -111,7 +111,7 @@ public class FloatingAverageCalculatorTest {
         FloatingAverage floatingAverageSell = FloatingAverage.newBuilder(createBitcoinTestData())
                 .setAlertState(SELL).build();
         Currency bitcoin = newCurrency("bitcoin", "Bitcoin", "BTC", new BigDecimal("1229.68"),
-                LocalDate.of(2017, 1, 24).atStartOfDay().toInstant(UTC));
+                LocalDate.of(2017, 1, 24).atStartOfDay().toInstant(UTC), 0);
 
         FloatingAverage latestAverage = calculator.calculate(bitcoin, floatingAverageSell);
 

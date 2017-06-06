@@ -5,6 +5,7 @@ import static org.kiwi.aws.s3.S3Content.newS3Content;
 import com.google.inject.Inject;
 import com.google.protobuf.InvalidProtocolBufferException;
 import java.util.Arrays;
+import java.util.Optional;
 import org.kiwi.aws.s3.S3Bucket;
 import org.kiwi.aws.s3.S3Content;
 import org.kiwi.aws.s3.S3KeyProvider;
@@ -24,18 +25,24 @@ public class DepotS3Repository implements DepotRepository {
     }
 
     @Override
-    public Depot load(String id) {
+    public Optional<Depot> load(String id) {
         String key = keyProvider.createKeyFor(id);
-        byte[] bytes = s3Bucket.retrieveContentFor(key).bytes();
-        return toDepot(bytes);
+        if (s3Bucket.exists(key)) {
+            Depot depot = loadDepotFor(key);
+            return Optional.of(depot);
+        }
+        return Optional.empty();
     }
 
     @Override
     public void store(Depot depot) {
-        String key = keyProvider.createKeyFor(depot.getId());
-        byte[] bytes = depot.toByteArray();
-        S3Content content = createS3ContentWith(key, bytes);
+        S3Content content = createS3ContentOf(depot);
         s3Bucket.storeContent(content);
+    }
+
+    private Depot loadDepotFor(String key) {
+        byte[] bytes = s3Bucket.retrieveContentFor(key).bytes();
+        return toDepot(bytes);
     }
 
     private Depot toDepot(byte[] bytes) {
@@ -44,6 +51,12 @@ public class DepotS3Repository implements DepotRepository {
         } catch (InvalidProtocolBufferException e) {
             throw new RuntimeException("Failed to parse to Depot from " + Arrays.toString(bytes));
         }
+    }
+
+    private S3Content createS3ContentOf(Depot depot) {
+        String key = keyProvider.createKeyFor(depot.getId());
+        byte[] bytes = depot.toByteArray();
+        return createS3ContentWith(key, bytes);
     }
 
     private S3Content createS3ContentWith(String key, byte[] bytes) {

@@ -54,6 +54,11 @@ public class BinaryBucket implements S3Bucket {
     }
 
     @Override
+    public boolean exists(String key) {
+        return s3Client.doesObjectExist(bucketName, key);
+    }
+
+    @Override
     public String toString() {
         return getClass().getSimpleName() + "{bucketName=" + bucketName + ", s3Client=" + s3Client + "}";
     }

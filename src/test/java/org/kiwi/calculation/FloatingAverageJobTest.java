@@ -13,6 +13,7 @@ import static org.mockito.Mockito.when;
 import com.amazonaws.services.cloudwatch.AmazonCloudWatch;
 import java.math.BigDecimal;
 import java.time.LocalDate;
+import java.util.Optional;
 import org.junit.Before;
 import org.junit.Test;
 import org.kiwi.alert.DeviationAlert;
@@ -28,7 +29,7 @@ import org.kiwi.proto.FloatingAverageProtos.Quote;
 public class FloatingAverageJobTest {
 
     private static final Currency BITCOIN = newCurrency("bitcoin", "Bitcoin", "BTC", new BigDecimal("1229.68"),
-            LocalDate.of(2017, 1, 23).atStartOfDay().toInstant(UTC));
+            LocalDate.of(2017, 1, 23).atStartOfDay().toInstant(UTC), 0);
     private static final FloatingAverage BITCOIN_AVERAGE = createBitcoinTestData();
     private static final Depot DEPOT = Depot.newBuilder()
             .setId("test-depot")
@@ -45,7 +46,7 @@ public class FloatingAverageJobTest {
         CurrencyRepository currencyRepository = mock(CurrencyRepository.class);
         when(currencyRepository.retrieveCurrencies()).thenReturn(singleton(BITCOIN));
         depotRepository = mock(DepotRepository.class);
-        when(depotRepository.load("test-depot")).thenReturn(DEPOT);
+        when(depotRepository.load("test-depot")).thenReturn(Optional.of(DEPOT));
         floatingAverageCalculator = mock(FloatingAverageCalculator.class);
         deviationAlert = mock(DeviationAlert.class);
         CloudWatchMetricsWriter cloudWatchMetricsWriter = new TestMetricWriter();
@@ -109,7 +110,7 @@ public class FloatingAverageJobTest {
                 .setId("test-depot")
                 .addFloatingAverages(currentAverage)
                 .build();
-        when(depotRepository.load("test-depot")).thenReturn(depot);
+        when(depotRepository.load("test-depot")).thenReturn(Optional.of(depot));
         Quote newBitcoinQuote = Quote.newBuilder()
                 .setValue("1229.68")
                 .setAverage("1213.82")
@@ -137,7 +138,18 @@ public class FloatingAverageJobTest {
         Depot emptyDepot = Depot.newBuilder()
                 .setId("test-depot")
                 .build();
-        when(depotRepository.load("test-depot")).thenReturn(emptyDepot);
+        when(depotRepository.load("test-depot")).thenReturn(Optional.of(emptyDepot));
+        when(floatingAverageCalculator.calculate(BITCOIN, null)).thenReturn(BITCOIN_AVERAGE);
+
+        job.execute();
+
+        verify(depotRepository).store(DEPOT);
+        verifyNoMoreInteractions(deviationAlert);
+    }
+
+    @Test
+    public void should_be_able_to_calculate_if_initial_depot_does_not_exist() throws Exception {
+        when(depotRepository.load("test-depot")).thenReturn(Optional.empty());
         when(floatingAverageCalculator.calculate(BITCOIN, null)).thenReturn(BITCOIN_AVERAGE);
 
         job.execute();

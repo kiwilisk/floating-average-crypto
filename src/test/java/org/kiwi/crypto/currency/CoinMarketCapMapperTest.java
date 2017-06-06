@@ -35,10 +35,11 @@ public class CoinMarketCapMapperTest {
                 "        \"name\": \"Bitcoin\", \n" +
                 "        \"symbol\": \"BTC\", \n" +
                 "        \"price_usd\": \"1253.84\", \n" +
+                "        \"rank\": \"1\", \n" +
                 "        \"last_updated\": \"1488719045\"\n" +
                 "    }]";
         Currency expected = newCurrency("bitcoin", "Bitcoin", "BTC", new BigDecimal("1253.84"),
-                ofEpochSecond(1488719045));
+                ofEpochSecond(1488719045), 1);
 
         Collection<Currency> currency = mapper.map(json);
 
@@ -52,7 +53,7 @@ public class CoinMarketCapMapperTest {
                 "        \"last_updated\": \"1488719045\"\n" +
                 "    }]";
         Currency expected = newCurrency("NO_VALUE", "NO_VALUE", "NO_VALUE", new BigDecimal("1253.84"),
-                ofEpochSecond(1488719045));
+                ofEpochSecond(1488719045), 0);
 
         Collection<Currency> currency = mapper.map(json);
 
@@ -67,7 +68,7 @@ public class CoinMarketCapMapperTest {
                 "        \"symbol\": \"BTC\", \n" +
                 "        \"price_usd\": \"1253.84\"\n" +
                 "    }]";
-        Currency expected = newCurrency("bitcoin", "Bitcoin", "BTC", new BigDecimal("1253.84"), clock.instant());
+        Currency expected = newCurrency("bitcoin", "Bitcoin", "BTC", new BigDecimal("1253.84"), clock.instant(), 0);
 
         Collection<Currency> currency = mapper.map(json);
 
@@ -82,7 +83,7 @@ public class CoinMarketCapMapperTest {
                 "        \"symbol\": \"BTC\", \n" +
                 "        \"last_updated\": \"1488719045\"\n" +
                 "    }]";
-        Currency expected = newCurrency("bitcoin", "Bitcoin", "BTC", BigDecimal.ZERO, ofEpochSecond(1488719045));
+        Currency expected = newCurrency("bitcoin", "Bitcoin", "BTC", BigDecimal.ZERO, ofEpochSecond(1488719045), 0);
 
         Collection<Currency> currency = mapper.map(json);
 
