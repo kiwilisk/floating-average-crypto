@@ -44,15 +44,10 @@ public class FloatingAverageJob {
     }
 
     public void execute() {
-        Collection<Currency> currencies = metricsWriter.executeWithMetric(
-                currencyRepository::retrieveCurrencies, "currencyAPILoad");
-        Map<String, FloatingAverage> idToAverage = metricsWriter.executeWithMetric(
-                this::loadAveragesAndGroupById, "s3AverageLoad");
-        Collection<FloatingAverage> latestFloatingAverages =
-                metricsWriter.executeWithMetric(() -> calculateLatestAveragesWith(currencies, idToAverage),
-                        "averageCalculation");
-
-        metricsWriter.executeWithMetric(() -> store(latestFloatingAverages), "s3AverageStore");
+        Collection<Currency> currencies = currencyRepository.retrieveCurrencies();
+        Map<String, FloatingAverage> idToAverage = loadAveragesAndGroupById();
+        Collection<FloatingAverage> latestFloatingAverages = calculateLatestAveragesWith(currencies, idToAverage);
+        store(latestFloatingAverages);
 
         Set<String> top100CurrencyIds = currencies.stream()
                 .filter(currency -> currency.rank() <= 100)
