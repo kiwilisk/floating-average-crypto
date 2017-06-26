@@ -51,7 +51,7 @@ public class SNSAlert implements DeviationAlert {
     private PublishRequest createPublishRequestWith(String messageBody) {
         return new PublishRequest()
                 .withTopicArn(topic)
-                .withSubject("Floating average warning")
+                .withSubject("Floating Average Info - #NOFOMO")
                 .withMessage(messageBody);
     }
 

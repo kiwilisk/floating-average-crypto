@@ -44,27 +44,27 @@ public class FloatingAverageJob {
     }
 
     public void execute() {
-        Collection<Currency> currencies = metricsWriter.executeWithMetric(
-                currencyRepository::retrieveCurrencies, "currencyAPILoad");
-        Map<String, FloatingAverage> idToAverage = metricsWriter.executeWithMetric(
-                this::loadAveragesAndGroupById, "s3AverageLoad");
-        Collection<FloatingAverage> latestFloatingAverages =
-                metricsWriter.executeWithMetric(() -> calculateLatestAveragesWith(currencies, idToAverage),
-                        "averageCalculation");
+        Collection<Currency> currencies = retrieveCurrencies();
+        Map<String, FloatingAverage> idToAverage = loadAveragesAndGroupById();
+        Collection<FloatingAverage> latestFloatingAverages = calculateLatestAverages(currencies, idToAverage);
 
-        metricsWriter.executeWithMetric(() -> store(latestFloatingAverages), "s3AverageStore");
+        store(latestFloatingAverages);
 
-        Set<String> top100CurrencyIds = currencies.stream()
-                .filter(currency -> currency.rank() <= 100)
-                .map(Currency::id)
-                .collect(toSet());
-        alertForChangedState(idToAverage, latestFloatingAverages, top100CurrencyIds);
+        alertForChangedState(idToAverage, latestFloatingAverages, getTop100CurrencyIds(currencies));
+    }
+
+    private Collection<Currency> retrieveCurrencies() {
+        return metricsWriter.executeWithMetric(
+                currencyRepository::retrieveCurrencies,
+                "currencyAPILoad");
     }
 
     private Map<String, FloatingAverage> loadAveragesAndGroupById() {
-        return depotRepository.load(depotId)
-                .map(this::toIdToAverageMap)
-                .orElse(emptyMap());
+        return metricsWriter.executeWithMetric(
+                () -> depotRepository.load(depotId)
+                        .map(this::toIdToAverageMap)
+                        .orElse(emptyMap()),
+                "s3AverageLoad");
     }
 
     private Map<String, FloatingAverage> toIdToAverageMap(Depot depot) {
@@ -72,19 +72,30 @@ public class FloatingAverageJob {
                 .collect(toMap(FloatingAverage::getId, floatingAverage -> floatingAverage));
     }
 
-    private Collection<FloatingAverage> calculateLatestAveragesWith(Collection<Currency> currencies,
+    private Collection<FloatingAverage> calculateLatestAverages(Collection<Currency> currencies,
             Map<String, FloatingAverage> idToAverage) {
-        return currencies.parallelStream()
-                .map(toLatestFloatingAverage(idToAverage))
-                .collect(toSet());
+        return metricsWriter.executeWithMetric(() ->
+                        currencies.parallelStream()
+                                .map(toLatestFloatingAverage(idToAverage))
+                                .collect(toSet()),
+                "averageCalculation");
     }
 
-    private Function<Currency, FloatingAverage> toLatestFloatingAverage(
-            Map<String, FloatingAverage> idToAverage) {
+    private Function<Currency, FloatingAverage> toLatestFloatingAverage(Map<String, FloatingAverage> idToAverage) {
         return currency -> {
             FloatingAverage floatingAverage = idToAverage.get(currency.id());
             return floatingAverageCalculator.calculate(currency, floatingAverage);
         };
+    }
+
+    private void store(Collection<FloatingAverage> latestFloatingAverages) {
+        metricsWriter.executeWithMetric(() -> {
+            Depot depot = Depot.newBuilder()
+                    .setId(depotId)
+                    .addAllFloatingAverages(latestFloatingAverages)
+                    .build();
+            depotRepository.store(depot);
+        }, "s3AverageStore");
     }
 
     private void alertForChangedState(Map<String, FloatingAverage> idToAverage,
@@ -99,6 +110,13 @@ public class FloatingAverageJob {
         }
     }
 
+    private Set<String> getTop100CurrencyIds(Collection<Currency> currencies) {
+        return currencies.stream()
+                .filter(currency -> currency.rank() <= 100)
+                .map(Currency::id)
+                .collect(toSet());
+    }
+
     private Predicate<FloatingAverage> alertStateHasChanged(Map<String, FloatingAverage> idToAverage) {
         return currentAverage -> {
             FloatingAverage previousAverage = idToAverage.get(currentAverage.getId());
@@ -106,11 +124,4 @@ public class FloatingAverageJob {
         };
     }
 
-    private void store(Collection<FloatingAverage> floatingAverages) {
-        Depot depot = Depot.newBuilder()
-                .setId(depotId)
-                .addAllFloatingAverages(floatingAverages)
-                .build();
-        depotRepository.store(depot);
-    }
 }
