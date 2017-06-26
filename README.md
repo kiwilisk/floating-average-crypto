@@ -1,20 +1,20 @@
 # floating-average-crypto
-## Floating average calculation for crypto currency.
+## Moving average calculation for crypto currency.
 
 This is mainly a project to try out different technologies with a (more or less) real use case.
 Maybe it doesn't make sense ;)
 
 ### What is it for?
 This code should be deployed as a lambda function in AWS.
-During execution it will pull the top 100 crypto currencies from an API and store the values as ProtoBuf in S3.
-Currently it is designed to calculate the 200 days average of each currency, hence it should run once a day.
+During execution it will pull crypto currencies US Dollar values from an API and store them as ProtoBuf format in S3.
+Currently it is designed to calculate the 200 days moving average of each currency, hence it should run once a day.
 So, yeah you have to wait 200 days before you actually have the average if you start from scratch...
-It will notify any subscribers to an AWS SNSN topic if the current value of the currency deviates more or less than a percentage threshold.
+It will notify any subscribers to an AWS SNS topic if the current value of the currency deviates more or less than a percentage threshold.
 
 ### how to use
 * have an AWS Account
 * create an S3 bucket
-* upload currency.json to this bucket and configure individual currencies if necessary
+* upload currency.json to this bucket and configure individual currencies if needed
 * provide S3 bucket in the config.properties file as _aws.s3.bucket.name_
 * mvn clean package
 * create a Java 8 Lambda function, provide a SNS topic as Environment Variable _floatingAverageWarningTopic_
@@ -23,11 +23,12 @@ It will notify any subscribers to an AWS SNSN topic if the current value of the 
 * configure AWS CloudWatch to run Lambda function once a day
 
 Technology used in this one:
-* [Java 8](https://java.com/de/)
-* [Google Guice](https://github.com/google/guice) 
-* [Google AutoValue](https://github.com/google/auto/tree/master/value) 
-* [Google Protocol Buffers](https://developers.google.com/protocol-buffers/)
-* [AWS Lambda](https://aws.amazon.com/lambda/)
-* [AWS S3](https://aws.amazon.com/s3/)
-* [AWS SNS](https://aws.amazon.com/sns/)
-* [UniRest](http://unirest.io/)
+* [Java 8](https://java.com/de/) Programming language
+* [Google Guice](https://github.com/google/guice) Dependency injection
+* [Google AutoValue](https://github.com/google/auto/tree/master/value) Immutable value types for Java 
+* [Google Protocol Buffers](https://developers.google.com/protocol-buffers/) Structured data serialization
+* [AWS Lambda](https://aws.amazon.com/lambda/) Serverless code execution
+* [AWS S3](https://aws.amazon.com/s3/) Simple (file) storage
+* [AWS SNS](https://aws.amazon.com/sns/) Notifications (E-Mail, Push, SMS...)
+* [AWS CloudWatch](https://aws.amazon.com/cloudwatch/) Events, Logs, Metrics
+* [UniRest](http://unirest.io/) REST client
