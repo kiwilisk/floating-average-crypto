@@ -9,6 +9,7 @@ import static org.mockito.Matchers.any;
 import static org.mockito.Mockito.doThrow;
 import static org.mockito.Mockito.mock;
 import static org.mockito.Mockito.verify;
+import static org.mockito.Mockito.when;
 
 import com.amazonaws.services.s3.AmazonS3Client;
 import com.amazonaws.services.s3.model.GetObjectRequest;
@@ -87,5 +88,15 @@ public class BinaryBucketTest {
     public void should_throw_illegal_argument_exception_if_content_is_null() throws Exception {
         assertThatExceptionOfType(IllegalArgumentException.class)
                 .isThrownBy(() -> binaryBucket.storeContent(null));
+    }
+
+    @Test
+    public void should_check_for_object_existence_in_bucket() throws Exception {
+        when(s3Client.doesObjectExist(BUCKET_NAME, "someKey")).thenReturn(true);
+
+        boolean objectExists = binaryBucket.exists("someKey");
+
+        assertThat(objectExists).isTrue();
+        verify(s3Client).doesObjectExist(BUCKET_NAME, "someKey");
     }
 }

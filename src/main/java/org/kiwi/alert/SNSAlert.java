@@ -30,16 +30,19 @@ public class SNSAlert implements DeviationAlert {
 
     @Override
     public void alert(FloatingAverage floatingAverage) {
+        if (floatingAverage == null) {
+            return;
+        }
         String messageBody = createMessageBodyWith(floatingAverage);
         publish(messageBody);
     }
 
     @Override
-    public void alert(Collection<FloatingAverage> floatingAverage) {
-        if (floatingAverage.isEmpty()) {
+    public void alert(Collection<FloatingAverage> floatingAverages) {
+        if (floatingAverages.isEmpty()) {
             return;
         }
-        String multipleMessagesBody = floatingAverage.stream()
+        String multipleMessagesBody = floatingAverages.stream()
                 .map(this::createMessageBodyWith)
                 .collect(joining("\n\n"));
         publish(multipleMessagesBody);
@@ -48,7 +51,7 @@ public class SNSAlert implements DeviationAlert {
     private PublishRequest createPublishRequestWith(String messageBody) {
         return new PublishRequest()
                 .withTopicArn(topic)
-                .withSubject("Floating average warning")
+                .withSubject("Floating Average Info - #NOFOMO")
                 .withMessage(messageBody);
     }
 

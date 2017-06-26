@@ -1,6 +1,8 @@
 package org.kiwi.crypto.currency;
 
+import static java.math.BigDecimal.ZERO;
 import static java.time.Instant.ofEpochSecond;
+import static java.util.Spliterator.ORDERED;
 import static java.util.Spliterators.spliteratorUnknownSize;
 import static java.util.stream.Collectors.toSet;
 import static java.util.stream.StreamSupport.stream;
@@ -14,7 +16,6 @@ import java.math.BigDecimal;
 import java.time.Clock;
 import java.time.Instant;
 import java.util.Collection;
-import java.util.Spliterator;
 import java.util.function.Function;
 
 public class CoinMarketCapMapper implements CurrencyMapper<String> {
@@ -34,7 +35,7 @@ public class CoinMarketCapMapper implements CurrencyMapper<String> {
     public Collection<Currency> map(String value) {
         try {
             JsonNode jsonNode = objectMapper.readTree(value);
-            return stream(spliteratorUnknownSize(jsonNode.iterator(), Spliterator.ORDERED), false)
+            return stream(spliteratorUnknownSize(jsonNode.iterator(), ORDERED), false)
                     .map(toCurrency())
                     .collect(toSet());
         } catch (IOException e) {
@@ -50,7 +51,8 @@ public class CoinMarketCapMapper implements CurrencyMapper<String> {
                 String symbol = parseTextFrom(node, "symbol");
                 BigDecimal priceInUsDollar = parsePriceFrom(node);
                 Instant lastUpdated = parseInstantFrom(node);
-                return newCurrency(id, name, symbol, priceInUsDollar, lastUpdated);
+                int rank = parseRankFrom(node);
+                return newCurrency(id, name, symbol, priceInUsDollar, lastUpdated, rank);
             } catch (Exception e) {
                 throw new RuntimeException("could not parse " + node);
             }
@@ -69,6 +71,12 @@ public class CoinMarketCapMapper implements CurrencyMapper<String> {
 
     private BigDecimal parsePriceFrom(JsonNode node) {
         JsonNode jsonNode = node.get("price_usd");
-        return jsonNode != null && !jsonNode.isNull() ? new BigDecimal(jsonNode.asText()) : BigDecimal.ZERO;
+        return jsonNode != null && !jsonNode.isNull() ? new BigDecimal(jsonNode.asText()) : ZERO;
     }
+
+    private int parseRankFrom(JsonNode node) {
+        JsonNode jsonNode = node.get("rank");
+        return jsonNode != null && !jsonNode.isNull() ? jsonNode.asInt() : 0;
+    }
+
 }

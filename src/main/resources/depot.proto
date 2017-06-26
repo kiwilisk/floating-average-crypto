@@ -27,3 +27,8 @@ message FloatingAverage {
   int64 closingDate = 9;
   AlertState alertState = 10;
 }
+
+message Depot {
+  string id = 1;
+  repeated FloatingAverage floatingAverages = 2;
+}

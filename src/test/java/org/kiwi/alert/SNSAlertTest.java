@@ -48,7 +48,7 @@ public class SNSAlertTest {
                 + "deviates more than 5.0 percent from the current floating average of 1134.23.";
         PublishRequest expectedPublishRequest = new PublishRequest()
                 .withTopicArn(TOPIC_ARN)
-                .withSubject("Floating average warning")
+                .withSubject("Floating Average Info - #NOFOMO")
                 .withMessage(expectedMessage);
         verify(snsClient).publish(expectedPublishRequest);
     }
@@ -64,7 +64,7 @@ public class SNSAlertTest {
                 + "deviates more than 4.0 percent from the current floating average of 1229.68.";
         PublishRequest expectedPublishRequest = new PublishRequest()
                 .withTopicArn(TOPIC_ARN)
-                .withSubject("Floating average warning")
+                .withSubject("Floating Average Info - #NOFOMO")
                 .withMessage(expectedMessage);
         verify(snsClient).publish(expectedPublishRequest);
     }
@@ -87,7 +87,7 @@ public class SNSAlertTest {
                 + "deviates more than 5.0 percent from the current floating average of 1134.23.";
         PublishRequest expectedPublishRequest = new PublishRequest()
                 .withTopicArn(TOPIC_ARN)
-                .withSubject("Floating average warning")
+                .withSubject("Floating Average Info - #NOFOMO")
                 .withMessage(expectedMessage);
         verify(snsClient).publish(expectedPublishRequest);
     }
