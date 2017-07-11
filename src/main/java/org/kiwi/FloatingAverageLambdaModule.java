@@ -2,6 +2,7 @@ package org.kiwi;
 
 import static com.fasterxml.jackson.databind.SerializationFeature.WRITE_DATES_AS_TIMESTAMPS;
 import static com.google.inject.name.Names.bindProperties;
+import static java.util.Collections.singleton;
 
 import com.amazonaws.services.cloudwatch.AmazonCloudWatch;
 import com.amazonaws.services.cloudwatch.AmazonCloudWatchAsyncClientBuilder;
@@ -22,6 +23,7 @@ import com.google.inject.TypeLiteral;
 import com.google.inject.name.Named;
 import java.io.IOException;
 import java.io.InputStream;
+import java.net.SocketTimeoutException;
 import java.time.Clock;
 import java.util.HashMap;
 import java.util.Properties;
@@ -42,7 +44,9 @@ import org.kiwi.proto.DepotRepository;
 import org.kiwi.proto.DepotS3Repository;
 import org.kiwi.proto.HexKeyProvider;
 import org.kiwi.rest.RestClient;
-import org.kiwi.rest.UnirestClient;
+import org.kiwi.rest.RetryingRestClient;
+import org.kiwi.retry.ExponentialBackoffStrategy;
+import org.kiwi.retry.RetryStrategy;
 
 public class FloatingAverageLambdaModule extends AbstractModule {
 
@@ -60,7 +64,7 @@ public class FloatingAverageLambdaModule extends AbstractModule {
                 .annotatedWith(CoinMarketCap.class)
                 .to(CoinMarketCapMapper.class);
         bind(RestClient.class)
-                .to(UnirestClient.class);
+                .to(RetryingRestClient.class);
         bind(S3Bucket.class)
                 .to(BinaryBucket.class);
         bind(S3KeyProvider.class)
@@ -126,6 +130,12 @@ public class FloatingAverageLambdaModule extends AbstractModule {
     @Singleton
     EnvironmentVariables environmentVariables() {
         return new EnvironmentVariables(System.getenv());
+    }
+
+    @Provides
+    @Singleton
+    RetryStrategy<String> retryStrategy() {
+        return new ExponentialBackoffStrategy<>(singleton(SocketTimeoutException.class), new int[]{10, 30, 60});
     }
 
     private Properties loadProperties(String propertiesFile) {
