@@ -4,9 +4,11 @@ import static java.lang.Thread.sleep;
 
 import java.util.Collection;
 import java.util.concurrent.Callable;
+import org.apache.log4j.Logger;
 
 public class ExponentialBackoffStrategy<T> implements RetryStrategy<T> {
 
+    private static final Logger LOGGER = Logger.getLogger(ExponentialBackoffStrategy.class);
     private static final int SECONDS_IN_MILLISECONDS = 1000;
 
     private final Collection<Class<? extends Throwable>> backoffExceptions;
@@ -28,6 +30,7 @@ public class ExponentialBackoffStrategy<T> implements RetryStrategy<T> {
         } catch (Exception potentialBackoffException) {
             Throwable exceptionCause = potentialBackoffException.getCause();
             if (exceptionCause != null && shouldTryAgain(attempt) && isBackoffException(exceptionCause)) {
+                LOGGER.warn("Execution of [" + callable.getClass() + "] failed. Will retry", exceptionCause);
                 return retry(attempt, callable);
             } else {
                 throw new RuntimeException(potentialBackoffException);
